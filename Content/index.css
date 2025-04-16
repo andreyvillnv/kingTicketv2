@@ -1,0 +1,454 @@
+﻿/* Reset y estilos base */
+body {
+	margin: 0;
+	font-family: 'Segoe UI', Arial, sans-serif;
+	background-color: #111;
+	color: white;
+	line-height: 1.6;
+}
+
+/* Hero Section */
+.hero {
+	position: relative;
+	background: url('/images/concierto.jpg') center/cover no-repeat;
+	min-height: 60vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 0 20px;
+}
+
+.hero-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.hero-content {
+	position: relative;
+	z-index: 2;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.hero-subtitle {
+	font-size: 1.5rem;
+	color: #BFF747;
+	margin-bottom: 10px;
+}
+
+.hero-title {
+	font-size: 3rem;
+	margin: 0 0 20px 0;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.hero-text {
+	font-size: 1.2rem;
+	margin-bottom: 30px;
+	opacity: 0.9;
+}
+
+/* Barra de búsqueda */
+.search-container {
+	display: flex;
+	justify-content: center;
+	margin: 30px auto;
+	max-width: 800px;
+	padding: 0 20px;
+	transition: all 0.3s ease;
+}
+
+	.search-container.active {
+		margin-bottom: 30px;
+	}
+
+#search-bar {
+	flex: 1;
+	padding: 15px 20px;
+	font-size: 1rem;
+	border: none;
+	border-radius: 30px 0 0 30px;
+	background: rgba(255, 255, 255, 0.9);
+	max-width: 600px;
+	display: none;
+}
+
+.search-container.active #search-bar {
+	display: block;
+}
+
+.search-btn {
+	background-color: #BFF747;
+	color: black;
+	border: none;
+	padding: 0 25px;
+	border-radius: 30px;
+	cursor: pointer;
+	font-size: 1.1rem;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.search-container.active .search-btn {
+	border-radius: 0 30px 30px 0;
+}
+
+.search-btn:hover {
+	background-color: #a5e02e;
+}
+
+/* Sección de eventos */
+.events-section {
+	padding: 50px 20px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.section-header {
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+.section-title {
+	font-size: 2rem;
+	margin-bottom: 20px;
+	color: #BFF747;
+}
+
+.event-filters {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 20px;
+}
+
+.filter-btn {
+	background: #222;
+	color: white;
+	border: none;
+	padding: 8px 20px;
+	border-radius: 30px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+	.filter-btn.active, .filter-btn:hover {
+		background: #BFF747;
+		color: black;
+	}
+
+/* Grid de eventos */
+.events-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 30px;
+}
+
+/* Tarjetas de evento */
+.event-card {
+	background: #222;
+	border-radius: 12px;
+	overflow: hidden;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+	display: flex;
+	flex-direction: column;
+}
+
+	.event-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 10px 20px rgba(191, 247, 71, 0.1);
+	}
+
+.event-badge {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	background: #ff4757;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 20px;
+	font-size: 0.8rem;
+	font-weight: bold;
+	z-index: 2;
+}
+
+.event-image {
+	width: 100%;
+	height: 180px;
+	object-fit: cover;
+	display: block;
+}
+
+.event-info {
+	padding: 20px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.event-title {
+	margin: 0 0 10px 0;
+	font-size: 1.3rem;
+}
+
+.event-meta {
+	margin-bottom: 15px;
+	font-size: 0.9rem;
+	color: #aaa;
+}
+
+	.event-meta span {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		margin-bottom: 5px;
+	}
+
+.event-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: auto;
+}
+
+.event-price {
+	font-weight: bold;
+	color: #BFF747;
+}
+
+/* Botones */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 25px;
+	font-weight: bold;
+	text-decoration: none;
+	border-radius: 30px;
+	transition: all 0.3s ease;
+}
+
+.btn-hero {
+	background: #BFF747;
+	color: black;
+	font-size: 1.1rem;
+}
+
+	.btn-hero:hover {
+		background: #a5e02e;
+		transform: translateY(-3px);
+		box-shadow: 0 5px 15px rgba(191, 247, 71, 0.3);
+	}
+
+.btn-event {
+	background: transparent;
+	color: #BFF747;
+	border: 2px solid #BFF747;
+	padding: 8px 15px;
+	font-size: 0.9rem;
+}
+
+	.btn-event:hover {
+		background: rgba(191, 247, 71, 0.1);
+	}
+
+.btn-back {
+	color: #BFF747;
+	text-decoration: none;
+	font-weight: bold;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin: 30px 0;
+	transition: all 0.3s ease;
+}
+
+	.btn-back:hover {
+		color: #a5e02e;
+	}
+
+/* Sin eventos */
+.no-events {
+	grid-column: 1 / -1;
+	text-align: center;
+	padding: 50px 20px;
+}
+
+	.no-events i {
+		font-size: 3rem;
+		color: #BFF747;
+		margin-bottom: 20px;
+	}
+
+	.no-events h3 {
+		font-size: 1.5rem;
+		margin-bottom: 10px;
+	}
+
+	.no-events p {
+		color: #aaa;
+		margin-bottom: 20px;
+	}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.hero-title {
+		font-size: 2rem;
+	}
+
+	.hero-subtitle {
+		font-size: 1.2rem;
+	}
+
+	.hero-text {
+		font-size: 1rem;
+	}
+
+	.section-title {
+		font-size: 1.5rem;
+	}
+
+	.events-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.search-container {
+		margin: 20px auto;
+	}
+
+	.search-btn {
+		padding: 0 20px;
+	}
+}
+
+
+/* Estilos para el carrusel */
+.hero-carousel {
+	position: relative;
+	width: 100%;
+	min-height: 60vh;
+	overflow: hidden;
+}
+
+.carousel-track {
+	display: flex;
+	transition: transform 0.5s ease;
+	height: 100%;
+}
+
+.carousel-slide {
+	min-width: 100%;
+	position: relative;
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.carousel-content {
+	position: relative;
+	z-index: 2;
+	max-width: 800px;
+	padding: 0 20px;
+	text-align: center;
+	color: white;
+}
+
+.carousel-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.6);
+	z-index: 1;
+}
+
+.carousel-nav {
+	position: absolute;
+	bottom: 20px;
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	z-index: 3;
+}
+
+.carousel-dot {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.5);
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+	.carousel-dot.active {
+		background: #BFF747;
+		transform: scale(1.2);
+	}
+
+/* Ajustes para el hero section dentro del carrusel */
+.carousel-content .hero-subtitle {
+	font-size: 1.5rem;
+	color: #BFF747;
+	margin-bottom: 10px;
+}
+
+.carousel-content .hero-title {
+	font-size: 3rem;
+	margin: 0 0 20px 0;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.carousel-content .hero-text {
+	font-size: 1.2rem;
+	margin-bottom: 30px;
+	opacity: 0.9;
+}
+
+.carousel-content .btn-hero {
+	background: #BFF747;
+	color: black;
+	font-size: 1.1rem;
+	padding: 12px 25px;
+	border-radius: 30px;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	transition: all 0.3s ease;
+}
+
+	.carousel-content .btn-hero:hover {
+		background: #a5e02e;
+		transform: translateY(-3px);
+		box-shadow: 0 5px 15px rgba(191, 247, 71, 0.3);
+	}
+
+/* Responsive para el carrusel */
+@media (max-width: 768px) {
+	.carousel-content .hero-title {
+		font-size: 2rem;
+	}
+
+	.carousel-content .hero-subtitle {
+		font-size: 1.2rem;
+	}
+
+	.carousel-content .hero-text {
+		font-size: 1rem;
+	}
+}

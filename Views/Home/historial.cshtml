@@ -1,0 +1,33 @@
+﻿@model List<ProyectoRelampago.Models.HistorialVentaViewModel>
+
+@Styles.Render("~/Content/his.css")
+
+<link rel="stylesheet" href="~/css/historial.css" />
+
+<main class="historial-container">
+    <h1>Historial de Compras</h1>
+
+    <div class="lista-compras">
+        <table class="tabla-ventas">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th>Cantidad de Boletos</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var venta in Model)
+                {
+                    <tr>
+                        <td>@venta.Fecha.ToString("dd/MM/yyyy")</td>
+                        <td>@venta.Cliente</td>
+                        <td>$@venta.Total</td>
+                        <td>@venta.CantidadBoletos</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</main>

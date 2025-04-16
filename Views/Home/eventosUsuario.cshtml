@@ -1,0 +1,16 @@
+
+@Styles.Render("~/Content/perfil.css")
+<main>
+    <img class="logo" src="images/logo.png" alt="logo">
+    <div class="titulo">
+        <h1>Historial de compras</h1>
+    </div>
+    <section id="compras" class="compras">
+    </section>
+</main>
+<div id="errorModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="cerrarModal()">&times;</span>
+        <p id="mensaje"> <%-error%> </p>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+@model List<ProyectoRelampago.Models.UusariosViewModel>
+
+@Styles.Render("~/Content/his.css")
+<link rel="stylesheet" href="~/css/historial.css" />
+
+<main class="historial-container">
+    <h1>Gestión de Usuarios</h1>
+
+    <!-- Formulario para crear nuevo usuario -->
+    <h3>Nuevo Usuario</h3>
+    @using (Html.BeginForm("CrearUsuario", "Home", FormMethod.Post))
+    {
+        <table class="tabla-ventas">
+            <tr>
+                <td>@Html.TextBox("Nombre", null, new { placeholder = "Nombre" })</td>
+                <td>@Html.TextBox("Correo", null, new { placeholder = "Correo" })</td>
+                <td>@Html.TextBox("telefono", null, new { placeholder = "Teléfono" })</td>
+                <td>@Html.TextBox("Rol", null, new { placeholder = "Rol" })</td>
+                <td>@Html.Password("Pass", null, new { placeholder = "Contraseña" })</td>
+                <td>
+                    <button type="submit" class="btn btn-success btn-sm">Agregar</button>
+                </td>
+            </tr>
+        </table>
+    }
+
+    <br />
+    <h3>Usuarios Registrados</h3>
+    <table class="tabla-ventas">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Rol</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    @using (Html.BeginForm("EditarUsuario", "Home", FormMethod.Post))
+                    {
+                        @Html.Hidden("idusuario", u.idusuario)
+                        <td>@Html.TextBox("Nombre", u.Nombre)</td>
+                        <td>@Html.TextBox("Correo", u.Correo)</td>
+                        <td>@Html.TextBox("telefono", u.telefono)</td>
+                        <td>@Html.TextBox("Rol", u.Rol)</td>
+                        <td>@(u.activo ? "Sí" : "No")</td>
+                        <td>
+                            <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+                            <a href="@Url.Action("EliminarUsuario", "Home", new { id = u.idusuario })" class="btn btn-danger btn-sm" onclick="return confirm('¿Eliminar este usuario?')">Eliminar</a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</main>

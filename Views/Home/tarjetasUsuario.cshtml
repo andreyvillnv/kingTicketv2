@@ -1,0 +1,276 @@
+@Styles.Render("~/Content/tarjetasUsuario.css")
+<style>
+    .modal {
+        display: none;
+        /* Oculto por defecto */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: #49454F;
+        margin: 20% auto;
+        padding: 20px;
+        width: 300px;
+        height: 300px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
+
+        .modal-content p {
+            background-color: #49454F;
+            color: white;
+        }
+
+    .close-btn {
+        background-color: #49454F;
+        cursor: pointer;
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+        float: right;
+    }
+
+        .close-btn:hover {
+            color: darkred;
+        }
+</style>
+
+
+<main>
+    <img class="logo" src="~/Content/images/logo.png" alt="logo">
+    <div class="titulo">
+        <h1>Tarjetas</h1>
+    </div>
+    <section class="tarjetas">
+        <div>
+            <h2>Agrega una tarjeta para los pagos</h2>
+
+            @*formulario para agregar tarjetas y fondos *@
+            <form id="agregar-tarjeta" class="datos-tarjetas">
+
+                <section class="info-tarjeta">
+                    <div>
+                        <label for="nombre">Nombre del titular</label>
+                        <input type="text" class="nombre" id="nombre" name="nombre" required>
+                    </div>
+
+                    <div>
+                        <label for="fecha">Mes</label>
+                        <select class="fecha" id="mes" name="fecha" required></select>
+                    </div>
+
+                    <div>
+                        <label for="anio">Año</label>
+                        <select class="fecha" id="anio" name="anio" required></select>
+                    </div>
+                </section>
+
+                <section class="info-tarjeta tarjeta-info">
+                    <div style="position: relative;">
+                        <label for="numero">Número de tarjeta</label>
+                        <input type="number" id="numero" class="numero" name="numero" required  style="padding-right: 40px;">
+                        <img id="icono-tipo-tarjeta" src="" alt="" style="position: absolute; right: 10px; top: 36px; width: 30px; display: none;">
+                    </div>
+                    <div>
+                        <label for="cvv">CVV</label>
+                        <input class="cvv" type="number" id="cvv" name="cvv" required>
+                    </div>
+                    <div>
+                        <label for="cvv">Fondos</label>
+                        <input class="cvv" type="number" id="fondos" name="fondos">
+                        @*<input class="agregar" type="submit" value="Agregar">*@
+                    </div>
+                </section>
+
+                <section class="info-tarjeta">
+                    <input class="agregar" type="submit" value="Agregar">
+                </section>
+
+            </form>
+            <h2>Tarjetas agregadas</h2>
+            <section id="datos-tarjetas" class="datos-tarjetas" method="post">
+
+                @*formulario para eliminar y agregar fondos a las tarjetas*@
+                <form action="eliminar-tarjeta" method="post" class="info-tarjeta">
+                    <div>
+                        <input type="text" class="tarjeta" id="nombre" name="tarjeta" readonly
+                               value="">
+                    </div>
+                    <div>
+                        <input class="eliminar" type="submit" name="fecha" value="Eliminar">
+                    </div>
+                    <div>
+                        <input class="eliminar" type="submit" name="fecha" value="Ver fondos">
+                    </div>
+
+                </form>
+
+
+            </section>
+        </div>
+    </section>
+
+</main>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="cerrarModal()">&times;</span>
+        <p id="mensaje"></p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const inputNumero = document.getElementById('numero');
+        const iconoTipo = document.getElementById('icono-tipo-tarjeta');
+
+        inputNumero.addEventListener('input', () => {
+            const numero = inputNumero.value;
+            const tipo = obtenerTipoTarjeta(numero);
+
+            if (tipo === "Visa") {
+                iconoTipo.src = "/Content/images/visa.svg";
+                iconoTipo.style.display = "inline-flex";
+                iconoTipo.style.backgroundColor = "#49454f";
+                iconoTipo.style.alignContent = "center"
+                iconoTipo.style.width = "44px"
+                iconoTipo.style.right = "15px"
+                iconoTipo.style.top = "40px"
+
+            } else if (tipo === "MasterCard") {
+                iconoTipo.src = "/Content/images/mastercard.svg";
+                iconoTipo.style.display = "inline-flex";
+                iconoTipo.style.backgroundColor = "#49454f";
+                iconoTipo.style.alignContent = "center"
+                iconoTipo.style.width = "24px"
+                iconoTipo.style.right = "24px"
+                iconoTipo.style.top = "40px"
+            } else {
+                iconoTipo.style.display = "none";
+            }
+        });
+
+        function obtenerTipoTarjeta(numero) {
+            numero = numero.toString();
+            if (/^4[0-9]{12}(?:[0-9]{3})?$/.test(numero)) {
+                return "Visa";
+            } else if (/^5[1-5][0-9]{14}$/.test(numero) || /^2(2[2-9][0-9]{2}|[3-6][0-9]{3}|7[01][0-9]{2}|720[0-9]{2})[0-9]{10}$/.test(numero)) {
+                return "MasterCard";
+            } else {
+                return "Desconocida";
+            }
+        }
+
+        function cerrarModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        // Cerrar el modal si se hace clic fuera de él
+        window.onclick = function (event) {
+            var modal = document.getElementById("modal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+        const mesSelect = document.querySelector('#mes');
+        const anioSelect = document.querySelector('#anio');
+        // Obtener la fecha actual
+        const fechaActual = new Date();
+        const mesActual = fechaActual.getMonth() + 1; // Los meses son 0-indexed
+        const anioActual = fechaActual.getFullYear();
+        // Llenar el select de meses
+        for (let i = 1; i <= 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            mesSelect.appendChild(option);
+        }
+        // Llenar el select de años
+        for (let i = anioActual; i <= anioActual + 10; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            anioSelect.appendChild(option);
+        }
+
+        const form = document.getElementById("agregar-tarjeta");
+        if (form) {
+            form.addEventListener("submit", async function (e) {
+                e.preventDefault();
+                const nombreTarjeta = document.getElementById("nombre").value;
+                const numTarjeta = document.getElementById("numero").value;
+                const numCvv = document.getElementById("cvv").value;
+                const mesVenc = document.getElementById("mes").value;
+                const anioVenc = document.getElementById("anio").value;
+                const fondos = document.getElementById("fondos").value;
+                const fechaVenc = new Date(anioVenc, mesVenc - 1);
+                const hoy = new Date();
+                if (fechaVenc < hoy) {
+                    alert("La fecha de vencimiento no puede ser anterior a hoy.");
+                    return;
+                }
+                const tipoTarjeta = obtenerTipoTarjeta(numTarjeta);
+                const tarjetaData = {
+                    nombreTarjeta,
+                    numTarjeta,
+                    numCvv,
+                    mesVenc,
+                    anioVenc,
+                    fondos,
+                    tipoTarjeta
+                };
+                await fetch('/home/RegistrarTarjeta', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(tarjetaData)
+                }).then(response => response.json())
+                    .then(data => {
+                        console.log("Respuesta tarjeta:", data);
+                        if (data.success) {
+                            nombreTarjeta.value = ''
+                            numTarjeta.value = ''
+                            numCvv.value = ''
+                            mesVenc.value = ''
+                            anioVenc.value = ''
+                            fondos.value = ''
+                            document.getElementById("mensaje").innerText = "Tarjeta agregada con éxito"
+                            document.getElementById("modal").style.display = "block";
+                            return
+                        } else {
+                            nombreTarjeta.value = ''
+                            numTarjeta.value = ''
+                            numCvv.value = ''
+                            mesVenc.value = ''
+                            anioVenc.value = ''
+                            fondos.value = ''
+                            document.getElementById("mensaje").innerText = data.mensaje
+                            document.getElementById("modal").style.display = "block";
+
+
+                           // window.location.href = "/home/Login";
+                            return
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error registrando tarjeta:", error);
+                    });
+
+
+            })
+
+
+
+        }
+
+
+
+    </script>
+}

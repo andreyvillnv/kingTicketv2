@@ -1,0 +1,51 @@
+@model ProyectoRelampago.Models.FacturaViewModel
+@Styles.Render("~/Content/factura.css")
+
+
+
+<main>
+    <img class="logo" src="~/Content/images/logo.png" alt="logo">
+    <div class="titulo">
+        <h1>Factura</h1>
+    </div>
+    <section class="perfil">
+
+
+        <div class="datos-cliente" style="  color:black">
+            <div id="contenido" style="margin-top:24px; background-color:aliceblue; color:black">
+                <img class="logo" src="~/Content/images/logo.png" alt="logo">
+                <h5>Se envió factura al correo <span id="correoUsuario">@Model.ClienteEmail</span></h5>
+                <h4>Detalles del evento </h4>
+                <p>Evento: <span id="nombreUsuario">@Model.EventoNombre </span></p>
+                <p>Lugar: <span id="nombreUsuario">@Model.EventoUbicacion </span></p>
+                <p>Fecha: <span id="nombreUsuario">@Model.Fechainicio.ToString("dd/MM/yyyy")</span></p>
+                <p>ID del Evento: <span id="nombreUsuario">@Model.EventoId</span></p>
+                <img class="img-evento" src="~/Content/@Model.img" alt="Alternate Text" />>
+                <h4>Datos del usuario</h4>
+                <p>Nombre: <span id="celularUsuario">@Model.ClienteNombre</span></p>
+                <p>Correo: <span id="celularUsuario">@Model.ClienteEmail</span></p>
+                <h4>Detalles de la compra</h4>
+                <p>SubTotal: <span id="celularUsuario">@Model.Subtotal</span></p>
+                <p>Total: <span id="celularUsuario">@Model.Total</span></p>
+                <p>Tarjeta: <span id="celularUsuario">@Model.NumeroTarjeta</span></p>
+            </div>
+            <div class="a-hover">
+                <a class="btn-editar" onclick="generarPDF()">Descargar PDF</a>
+                <span class="hover-btn-tarjetas">Descargar factura en formato PDF</span>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        function generarPDF() {
+            const element = document.getElementById('contenido');
+            html2pdf().from(element).save('Factura compra.pdf');
+        }
+    </script>
+
+}

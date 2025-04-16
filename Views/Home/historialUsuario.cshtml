@@ -1,0 +1,159 @@
+
+
+@Styles.Render("~/Content/perfil.css")
+
+<style>
+    .modal {
+        display: none;
+        /* Oculto por defecto */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: #49454F;
+        margin: 20% auto;
+        padding: 20px;
+        width: 300px;
+        height: 300px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
+
+        .modal-content p {
+            background-color: #49454F;
+            color: white;
+        }
+
+    .close-btn {
+        background-color: #49454F;
+        cursor: pointer;
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+        float: right;
+    }
+
+        .close-btn:hover {
+            color: darkred;
+        }
+</style>
+
+<main>
+    <img class="logo" src="~/Content/images/logo.png" alt="logo">
+    <div class="titulo">
+        <h1>Historial de compras</h1>
+    </div>
+    <section id="compras" class="compras">
+    </section>
+</main>
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="cerrarModal()">&times;</span>
+        <p id="mensaje"> </p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        function cerrarModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        // Cerrar el modal si se hace clic fuera de él
+        window.onclick = function (event) {
+            var modal = document.getElementById("modal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                const response = await fetch('/Home/HistorialComprasUsuario');
+                const eventosData = await response.json();
+                const compras = document.getElementById("compras");
+                compras.innerHTML = "";
+
+                // Si recibes un error desde el backend
+                if (eventosData.length === 0 || (eventosData[0] && eventosData[0].success === false)) {
+                    compras.innerHTML = "<p>No hay eventos para mostrar</p>";
+                    return;
+                }
+                console.log(eventosData.data)
+                eventosData.data.forEach(e => {
+                        compras.innerHTML += `<form class="historial">
+                                                <div class="info-historial">
+                                                    <img class='img-evento' src="${e.img}" alt="">
+                                                    <div class="descripcion">
+                                                        <div>
+                                                            <p id='Ubicacion'>Lugar: ${e.Ubicacion}</p>
+                                                            <p id='FechaInicio'>Fecha: ${e.FechaInicio}</p>
+                                                            <p id='descripcion'>Descripcion:${e.Descripcion}</p>
+                                                            <p id='evento_nombre'>Evento: ${e.evento_nombre}</p>
+                                                             <p id='idventa'>ID de venta: ${e.venta_id}</p>
+                                                        </div>
+                                                        <div class="btn-historial">
+                
+                                                            <div class="a-hover">
+                                                                <a href="" class="btn-reenviar">Reenviar</a>
+                                                                <span class="hover-btn-renviar">Renvía el boleto al correo</span>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>`;
+                    });
+                
+            } catch (error) {
+                console.error("Error al obtener historial de compras:", error);
+                document.getElementById("compras").innerHTML = "<p>Error al cargar los eventos.</p>";
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded",async function () {
+            document.body.addEventListener("click", async function (event) {
+                if (event.target.matches(".btn-reenviar")) {
+                    event.preventDefault(); // Evita que el enlace recargue la página
+
+                    // Encuentra el formulario más cercano al enlace "Renviar"
+                    let form = event.target.closest("form");
+
+                    // Captura solo los párrafos dentro del formulario específico
+                    let ubicacion = form.querySelector("#Ubicacion").innerText;
+                    let fecha = form.querySelector("#FechaInicio").innerText;
+                    let descripcion = form.querySelector("#descripcion").innerText;
+                    let eventoNombre = form.querySelector("#evento_nombre").innerText;
+                    let idventa = form.querySelector('#idventa').innerText
+
+                    // Muestra los datos en la consola (o envíalos a una API)
+                    console.log({ ubicacion, fecha, descripcion, eventoNombre, idventa });
+
+                    // Aquí puedes hacer algo con los datos, como enviarlos a una API
+                   await fetch("/Home/ReenviarBoleto", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ ubicacion, fecha, descripcion, eventoNombre, idventa })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const mensaje = document.getElementById('mensaje')
+                            mensaje.innerText = ''
+                            mensaje.innerText = data.mensaje
+                            document.getElementById("modal").style.display = "block";
+                        })
+                        .catch(error => console.error("Error al enviar:", error));
+                }
+            });
+        });
+
+    </script>
+}

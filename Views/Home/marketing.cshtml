@@ -1,0 +1,344 @@
+
+@Styles.Render("~/Content/marketing.css")
+
+<style>
+    .modal-error {
+        display: flex;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content-error {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 300px;
+        text-align: center;
+        position: relative;
+    }
+
+    .cerrar {
+        background-color: #fff;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        color: #bd4a4a;
+    }
+
+    .p-modal {
+        background-color: #fff;
+        color: black;
+    }
+
+    .cerrar:hover {
+        background-color: #fff;
+        color: #e22424;
+    }
+</style>
+<img class="logo" src="~/Content/images/logo.png" alt="logo">
+<div class="titulo">
+    <h1>Marketing</h1>
+</div>
+
+<main class="sectionMercadeo">
+
+
+    <section class="section-m">
+        <form class="formulario">
+
+            <div class="mensaje">
+                <label for="asunto-p">Asunto</label>
+                <input type="text" id="asunto-p" required>
+
+                <label for="destino-p">Enviar a</label>
+
+                <select name="" id="destino-p">
+                    <option value="visa">Clientes Visa</option>
+                    <option value="mastercard">Clientes MasterCard</option>
+                    <option value="todos">Todos</option>
+                </select>
+                <label for="personalizado-p">Envio personalizado</label>
+                <input type="email" id="personalizado-p">
+            </div>
+
+            <div class="mensaje">
+                <label for="mensaje-p">Mensaje</label>
+                <textarea name="" id="mensaje-p" required></textarea>
+            </div>
+
+            <div class="mensaje">
+                <label for="fecha-inicio-p">Inicio de la promoción</label>
+                <input type="date" id="fecha-inicio-p" required>
+                <label for="fecha-fin-p">Fin de la promoción</label>
+                <input type="date" id="fecha-fin-p" required>
+                <input class="enviar" type="submit" value="Enviar">
+            </div>
+
+
+        </form>
+
+
+    </section>
+
+    <div class="titulo">
+        <h1>Códigos</h1>
+    </div>
+
+    <section class="section-m">
+
+        <form class="formulario-c">
+
+            <div class="mensaje">
+                <label for="asunto-c">Asunto</label>
+                <input type="text" id="asunto-c" required>
+
+                <label for="destino-c">Enviar a</label>
+
+                <select name="" id="destino-c">
+                    <option value="visa">Clientes Visa</option>
+                    <option value="mastercard">Clientes MasterCard</option>
+                    <option value="todos">Todos</option>
+                </select>
+                <label for="personalizado-c">Envio personalizado</label>
+                <input type="email" id="personalizado-c">
+
+
+
+            </div>
+
+            <div class="mensaje">
+                <div class="descuento">
+
+                    <div>
+                        <label for="codigo-c">Código</label>
+                        <input type="text" required class="codigo" id="codigo-c">
+                    </div>
+
+                    <div>
+                        <label for="descuento-c">Descuento</label>
+                        <select name="" id="descuento-c">
+                            <option value="5">5 %</option>
+                            <option value="10">10 %</option>
+                            <option value="15">15 %</option>
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <label for="mensaje-c">Mensaje</label>
+                <textarea name="" class="mesaje-c" id="mensaje-c" required></textarea>
+            </div>
+
+            <div class="mensaje">
+                <label for="fecha-inicio-c">Inicio de la promoción</label>
+                <input type="date" id="fecha-inicio-c" required>
+                <label for="fecha-fin-c">Fin de la promoción</label>
+                <input type="date" id="fecha-fin-c" required>
+                <input class="enviar" type="submit" value="Enviar">
+            </div>
+
+
+        </form>
+
+    </section>
+    <div id="modalError" class="modal-error" style="display:none;">
+        <div class="modal-content-error">
+            <span id="cerrarModal" class="cerrar">&times;</span>
+            <p class="p-modal" id="mensajeError"></p>
+        </div>
+    </div>
+</main>
+@section scripts {
+
+
+        <script>
+            document.querySelector(".formulario").addEventListener("submit", async function (e) {
+                e.preventDefault();
+
+                const fechaInicio = new Date(document.getElementById("fecha-inicio-p").value);
+                const fechaFin = new Date(document.getElementById("fecha-fin-p").value);
+                const hoy = new Date();
+
+                hoy.setHours(0, 0, 0, 0);
+                fechaInicio.setHours(0, 0, 0, 0);
+                fechaFin.setHours(0, 0, 0, 0);
+
+                const unaSemanaDespuesDeHoy = new Date(hoy);
+                unaSemanaDespuesDeHoy.setDate(unaSemanaDespuesDeHoy.getDate() + 7);
+
+                const unaSemanaDespuesDeInicio = new Date(fechaInicio);
+                unaSemanaDespuesDeInicio.setDate(unaSemanaDespuesDeInicio.getDate() + 7);
+
+                let mensaje = "";
+
+                if (fechaInicio <= unaSemanaDespuesDeHoy) {
+                    mensaje = "La fecha de inicio debe ser al menos una semana después de hoy.";
+                } else if (fechaFin <= hoy) {
+                    mensaje = "La fecha de fin no puede ser anterior o igual a hoy.";
+                } else if (fechaFin < unaSemanaDespuesDeInicio) {
+                    mensaje = "La fecha de fin debe ser al menos una semana después de la fecha de inicio.";
+                }
+
+                if (mensaje !== "") {
+                    mostrarModal(mensaje);
+                    return;
+
+                }
+              
+                await promociones()
+                // Enviar formulario si todo es válido
+                //this.submit();
+            });
+
+            document.querySelector(".formulario-c").addEventListener("submit", async function (e) {
+                e.preventDefault();
+
+                const fechaInicio = new Date(document.getElementById("fecha-inicio-c").value);
+                const fechaFin = new Date(document.getElementById("fecha-fin-c").value);
+                const hoy = new Date();
+
+                hoy.setHours(0, 0, 0, 0);
+                fechaInicio.setHours(0, 0, 0, 0);
+                fechaFin.setHours(0, 0, 0, 0);
+
+                const unaSemanaDespuesDeHoy = new Date(hoy);
+                unaSemanaDespuesDeHoy.setDate(unaSemanaDespuesDeHoy.getDate() + 7);
+
+                const unaSemanaDespuesDeInicio = new Date(fechaInicio);
+                unaSemanaDespuesDeInicio.setDate(unaSemanaDespuesDeInicio.getDate() + 7);
+
+                let mensaje = "";
+
+                if (fechaInicio <= unaSemanaDespuesDeHoy) {
+                    mensaje = "La fecha de inicio debe ser al menos una semana después de hoy.";
+                } else if (fechaFin <= hoy) {
+                    mensaje = "La fecha de fin no puede ser anterior o igual a hoy.";
+                } else if (fechaFin < unaSemanaDespuesDeInicio) {
+                    mensaje = "La fecha de fin debe ser al menos una semana después de la fecha de inicio.";
+                }
+
+                if (mensaje !== "") {
+                    mostrarModal(mensaje);
+                    return;
+                }
+
+                await codigos()
+
+            });
+
+            function mostrarModal(mensaje) {
+                document.getElementById("mensajeError").innerText = mensaje;
+                document.getElementById("modalError").style.display = "flex";
+            }
+
+            document.getElementById("cerrarModal").addEventListener("click", function () {
+                document.getElementById("modalError").style.display = "none";
+            });
+
+            window.addEventListener("click", function (event) {
+                const modal = document.getElementById("modalError");
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            });
+
+            async function promociones() {
+                try {
+
+                    const asunto = document.getElementById('asunto-p').value
+                    const destino = document.getElementById('destino-p').value
+                    const personalizado = document.getElementById('personalizado-p').value
+                    const mensaje = document.getElementById('mensaje-p').value
+                    const fechaInicio = document.getElementById('fecha-inicio-p').value
+                    const fechaFin = document.getElementById('fecha-fin-p').value
+
+      
+                 
+                    await fetch('/Home/Mercadeo', {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            asunto,
+                            destino,
+                            personalizado,
+                            mensaje,
+                            fechaInicio,
+                            fechaFin
+})
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                mostrarModal("Promoción enviada")
+                                //location.reload();
+                            } else {
+                                mostrarModal("Se produjo un error al enviar la promoción")
+                            }
+                        });
+                } catch (error) {
+                    console.log(error)
+                }
+
+
+            }
+
+
+            async function codigos() {
+                try {
+
+                    const asunto = document.getElementById('asunto-c').value
+                    const destino = document.getElementById('destino-c').value
+                    const personalizado = document.getElementById('personalizado-c').value
+                    const mensaje = document.getElementById('mensaje-c').value
+                    const fechaInicio = document.getElementById('fecha-inicio-c').value
+                    const fechaFin = document.getElementById('fecha-fin-c').value
+                    const codigo = document.getElementById('codigo-c').value
+                    const descuento = document.getElementById('descuento-c').value
+                    await fetch('/Home/CodigosPromocionales', {
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            asunto,
+                            destino,
+                            personalizado,
+                            mensaje,
+                            fechaInicio,
+                            fechaFin,
+                            codigo,
+                            descuento
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                mostrarModal("Promoción de código enviada")
+                                //location.reload();
+                            } else {
+                                mostrarModal("Se produjo un error al enviar la promoción")
+                            }
+                        });
+                } catch (error) {
+                    console.log(error)
+                }
+
+
+            }
+            // Cerrar al hacer clic fuera del modal
+         
+        </script>
+    } 

@@ -1,0 +1,136 @@
+@Styles.Render("~/Content/recuperar-pass.css")
+
+
+<style>
+    .modal {
+        display: none;
+        /* Oculto por defecto */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: #BFF747;
+        margin: 20% auto;
+        padding: 20px;
+        width: 300px;
+        height: 300px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
+
+        .modal-content p {
+            background-color: #BFF747;
+            color: black;
+        }
+
+    .close-btn {
+        width: 20px;
+        background-color: #BFF747;
+        cursor: pointer;
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+        float: right;
+    }
+
+        .close-btn:hover {
+            color: darkred;
+        }
+</style>
+
+
+<main>
+    <img  src="~/Content/images/logo.png" class="logo" alt="logo">
+    <div class="titulo">
+        <h1>Recuperar contraseña</h1>
+    </div>
+    <form id="recuperacion" class="form-recuperar">
+        <section class="datos-recuperar">
+            <div class="ingreso-recuperar">
+                <div>
+                    <label for="correo">Correo electrónico</label>
+                    <input type="email" id="correo" name="correo" required>
+                </div>
+                <input type="submit" class="btn-enviar" value="Enviar">
+            </div>
+        </section>
+    </form>
+
+    <div id="modal" class="modal" style="display:none">
+        <div class="modal-content">
+            <span class="close-btn" onclick="cerrarModal()">&times;</span>
+            <p id="mensaje"></p>
+
+        </div>
+    </div>
+
+
+</main>
+
+@section Scripts {
+    <script>
+
+        function cerrarModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+        window.onclick = function (event) {
+            var modal = document.getElementById("modal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        } 
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+          
+
+            const form = document.getElementById("recuperacion");
+
+            if (form) {
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    console.log("Enviando con fetch...");
+
+                    const correo = document.getElementById("correo").value;      
+
+                    fetch("/Home/RecuperacionPass", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ correo})
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Respuesta:", data);
+                            if (data.success) {
+                                document.getElementById("mensaje").innerText = `Se envió correo al ${correo} con instruciones para la recuperación de la contraseña`;
+                                document.getElementById("modal").style.display = "block";
+                                correo.value=''
+                                
+                            } else {
+                                document.getElementById("mensaje").innerText = 'Se produjo un error';
+                                document.getElementById("modal").style.display = "block";
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                        });
+                });
+            } else {
+                console.warn("No se encontró el formulario con id 'loginForm'");
+            }
+        });
+
+
+
+
+    </script>
+}

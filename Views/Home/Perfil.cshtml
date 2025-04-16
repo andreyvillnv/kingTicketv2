@@ -1,0 +1,121 @@
+
+
+@Styles.Render("~/Content/perfil.css")
+
+<main>
+    <img class="logo" src="~/Content/images/logo.png" alt="logo">
+    <div class="titulo">
+        <h1>Perfil</h1>
+    </div>
+    <section class="perfil">
+        <nav>
+            <a href="~/Home/historialUsuario">Historial de compras</a>
+            <a href="~/home/tarjetasUsuario">Agregar tarjetas</a>
+            <a href="~/home/autentificacion">Autentificación en 2 pasos</a>
+        </nav>
+
+        <div class="datos-cliente">
+            <div>
+                <p>Nombre: <span id="nombreUsuario"></span></p>
+                <p>Número de celular: <span id="celularUsuario"></span></p>
+                <p>Correo: <span id="correoUsuario"></span></p>
+                <p>Dirección: <span id="direccionUsuario"></span></p>
+                <p>Telefono: <span id="telefonoUsuario"></span></p>
+            </div>
+            <div class="a-hover">
+                <a class="btn-editar" href="">Editar</a>
+                <span class="hover-btn-editar">Edita datos del perfil</span>
+
+                <a class="btn-editar" href="~/home/tarjetasUsuario">Tarjetas</a>
+                <span class="hover-btn-tarjetas">Edita y agrega fondos</span>
+            </div>
+
+        </div>
+
+
+
+
+
+    </section>
+   
+    
+    
+    <div class="titulo">
+        <h1>Historial de compras</h1>
+    </div>
+    <section class="compras">
+        <div class="historial">
+            <div class="info-historial">
+                <img class='img-evento' src="<%=img%>" alt="">
+                <div class="descripcion">
+                    <div>
+                        <p>Lugar: </p>
+                        <p>Fecha: </p>
+                        <p>Descripcion: </p>
+                        <p>Ubicación:</p>
+                        <p>Evento: </p>
+                    </div>
+                    <div class="btn-historial">
+
+                        <div class="a-hover">
+                            <a href="">Reenviar</a>
+                            <span class="hover-btn-renviar">Renvía el boleto al correo</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <a class="ver-mas" href="~Home/eventosUsuario">Ver más</a>
+
+    </section>
+</main>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                // Obtener perfil
+                const perfilResponse = await fetch("/Home/ObtenerPerfil");
+                const perfilData = await perfilResponse.json();
+
+                if (perfilData.success) {
+                    document.getElementById("nombreUsuario").textContent = perfilData.Nombre + ' '  + perfilData.Apellidos;               
+                    document.getElementById("celularUsuario").textContent = perfilData.Celular;
+                    document.getElementById("correoUsuario").textContent = perfilData.Correo;
+                    document.getElementById("direccionUsuario").textContent = perfilData.Direccion;
+                    document.getElementById("telefonoUsuario").textContent = perfilData.Telefono;
+                } else {
+                    alert("Error: " + perfilData.mensaje);
+                    window.location.href = "/Login";
+                    return;
+                }
+
+                // Obtener tarjetas
+                //const tarjetasResponse = await fetch("/Home/ObtenerTarjetas");
+                //const tarjetasData = await tarjetasResponse.json();
+
+                //const tarjetasList = document.getElementById("tarjetasList");
+
+                //if (tarjetasData.success && tarjetasData.tarjetas.length > 0) {
+                //    tarjetasData.tarjetas.forEach(tarjeta => {
+                //        const li = document.createElement("li");
+                //        li.textContent = `**** **** **** ${tarjeta.Numero.slice(-4)} | Titular: ${tarjeta.Titular} | Vence: ${tarjeta.Vencimiento}`;
+                //        tarjetasList.appendChild(li);
+                //    });
+                //} else {
+                //    const li = document.createElement("li");
+                //    li.textContent = "Tarjetas no agregadas";
+                //    tarjetasList.appendChild(li);
+                //}
+            } catch (error) {
+                console.error("Error en la carga de perfil o tarjetas:", error);
+                alert("Ocurrió un error al cargar los datos.");
+            }
+        });
+    </script>
+}
+
+

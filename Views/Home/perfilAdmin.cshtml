@@ -1,0 +1,67 @@
+
+
+@Styles.Render("~/Content/perfilAdmin.css")
+
+<main>
+    <img class="logo" src="~/Content/images/logo.png" alt="logo">
+    <div class="titulo">
+        <h1>Perfil empleado</h1>
+    </div>
+    <section class="perfil">
+        <div class="datos-cliente">
+
+            <div class="datosP">
+                <p>Nombre: <span id="nombreEmpleado"></span></p>
+                <p>Número de celular: <span id="celularEmpleado"></span></p>
+                <p>Correo: <span id="correoEmpleado"></span></p>
+                <p>Dirección: <span id="direccionEmpleado"></span></p>
+                <p>Telefono: <span id="telefonoEmpleado"></span></p>
+                <p>Rol: <span id="rolEmpleado"></span></p>               
+                <p>Autentificación por: <span id="rolAuten"></span></p>
+
+            </div>
+
+            <div class="a-hover">
+                <a class="btn-editar" href="">Editar</a>
+                <span class="hover-btn-editar">Edita datos del perfil</span>
+
+                <a class="btn-editar" href="~/home/autentificacionAdmin">Autentificación</a>
+                <span class="hover-btn-tarjetas">Autentificación</span>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                // Obtener perfil
+                const perfilResponse = await fetch("/Home/ObtenerPerfilAdmin");
+                const perfilData = await perfilResponse.json();
+
+                if (perfilData.success) {
+                    document.getElementById("nombreEmpleado").textContent = perfilData.Nombre + ' '  + perfilData.Apellidos;
+                    document.getElementById("celularEmpleado").textContent = perfilData.Celular;
+                    document.getElementById("correoEmpleado").textContent = perfilData.Correo;
+                    document.getElementById("direccionEmpleado").textContent = perfilData.Direccion;
+                    document.getElementById("telefonoEmpleado").textContent = perfilData.Telefono;
+                    document.getElementById("rolEmpleado").textContent = perfilData.Rol;
+                    document.getElementById("telefonoEmpleado").textContent = perfilData.Celular; rolAuten
+                    document.getElementById("rolAuten").textContent = perfilData.tipoAuthen; 
+                } else {
+                    alert("Error: " + perfilData.mensaje);
+                    window.location.href = "/LoginAdmin";
+                    return;
+                }
+
+            } catch (error) {
+                console.error("Error en la carga de perfil o tarjetas:", error);
+                alert("Ocurrió un error al cargar los datos.");
+            }
+        });
+    </script>
+}
+
+

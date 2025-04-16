@@ -1,0 +1,192 @@
+
+
+@Styles.Render("~/Content/preguntasF.css")
+
+<style>
+    .modal {
+        display: none;
+        /* Oculto por defecto */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: #49454F;
+        margin: 20% auto;
+        padding: 20px;
+        width: 300px;
+        height: 300px;
+        text-align: center;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
+
+        .modal-content p {
+            background-color: #49454F;
+            color: white;
+        }
+
+    .close-btn {
+        background-color: #49454F;
+        cursor: pointer;
+        color: red;
+        font-size: 20px;
+        font-weight: bold;
+        float: right;
+    }
+
+        .close-btn:hover {
+            color: darkred;
+        }
+</style>
+
+
+<main>
+    <img class="logo" src="~/Content/images/logo.png" alt="logo">
+    <div class="titulo">
+        <h1>Preguntas frecuentes</h1>
+    </div>
+
+    <section id="preguntas" class="section-PF"> </section>
+
+
+    <section id="formCorreo">
+        <form class="soporte" action="soporte" method="post">
+            <label for="correo">Correo</label>
+            <input class="correo" type="email" id="correo" name="correo" required>
+            <label for="asunto">Asunto</label>
+            <input class="asunto" type="text" id="asunto" name="asunto" required>
+            <label for="mensaje">Mensaje</label>
+            <!-- <input class="mensaje" type="text" id="mensaje" name="mensaje"> -->
+            <textarea class="mensaje" type="text" id="mensaje" name="mensaje" required></textarea>
+            <input class="enviar" type="submit" title="Enviar correo" value="Enviar">
+        </form>
+    </section>
+    <img id="mostrar" src="~/Content/images/chat.png" alt="">
+
+</main>
+
+
+<div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="cerrarModal()">&times;</span>
+            <p id="mensajeModal"> </p>
+        </div>
+    </div>
+
+
+
+
+@section Scripts {
+    <script>
+
+        function cerrarModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            var modal = document.getElementById("modal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+
+        const button = document.getElementById('mostrar');
+
+        button.addEventListener('click', () => {
+            const formcorreo = document.getElementById('formCorreo');
+
+            if (formcorreo.style.display === "block") {
+                formcorreo.style.display = "none";
+            } else {
+                formcorreo.style.display = "block";
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                // Obtener perfil
+                const preguntasResponse = await fetch("/Home/ObtenerPreguntas");
+                const preguntas = await preguntasResponse.json();
+
+                if (preguntas.success) {
+                    const preguntasRespuestas = document.getElementById("preguntas");
+                    preguntas.preguntas.forEach(p_r => {
+                        preguntasRespuestas.innerHTML += `<div class="pregunta">
+                                                                <h2 id="pregunta">${p_r.pregunta}</h2>
+                                                                <p id="respuesta">${p_r.respuesta}</p>
+                                                             </div>`;
+
+                    });
+                } else {
+                    alert("Error al cargar las preguntas");
+                    return;
+                }
+            } catch (error) {
+                console.error("Error en la carga de perfil o tarjetas:", error);
+                alert("Ocurrió un error al cargar los datos.");
+            }
+        });
+        document.addEventListener("DOMContentLoaded", async function () {
+            //console.log("JavaScript cargado correctamente");
+
+            const form = document.getElementById("formCorreo");
+
+            if (form) {
+                form.addEventListener("submit", async function (e) {
+                    e.preventDefault();
+
+                    const correoInput = document.getElementById("correo");
+                    const asuntoInput = document.getElementById("asunto");
+                    const mensajeInput = document.getElementById("mensaje");
+                    console.log(correoInput.value)
+                    const correo = correoInput.value;
+                    const asunto = asuntoInput.value;
+                    const mensaje = mensajeInput.value;
+
+                    await fetch("/Home/Soporte", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ correo, asunto, mensaje })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Respuesta usuario:", data);
+                            if (data.success) {
+                                const mensajeModal = document.getElementById("mensajeModal");
+                                const formcorreo = document.getElementById('formCorreo');
+                                mensajeModal.innerText = "Correo enviado correctamente";
+                              //  correo.value = "";
+                                asunto.value = "";
+                                mensaje.value = "";
+                                formcorreo.style.display = "none";
+                                document.getElementById("modal").style.display = "block";
+                            } else {
+                                document.getElementById("mensajeModal").innerText = "Se produjo un error al enviar el correo"
+                                document.getElementById("modal").style.display = "block";
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error registrando usuario:", error);
+                        });
+                })
+
+            }
+            else {
+                console.warn("No se encontró el formulario con id 'loginForm'");
+            }
+        });
+
+
+
+    </script>
+
+}

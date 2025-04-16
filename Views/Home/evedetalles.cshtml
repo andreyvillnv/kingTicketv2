@@ -1,0 +1,405 @@
+﻿@model ProyectoRelampago.Models.Evento
+
+
+@Styles.Render("~/Content/Detalles.css")
+
+<style>
+    .modal-error {
+        display: flex;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content-error {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 300px;
+        text-align: center;
+        position: relative;
+    }
+
+    .cerrar {
+        background-color: #fff;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        color: #bd4a4a;
+    }
+
+    .p-modal {
+        background-color: #fff;
+        color: black;
+    }
+
+    .cerrar:hover {
+        background-color: #fff;
+        color: #e22424;
+    }
+</style>
+
+
+<!-- Ícono de carrito -->
+<div class="carrito-icono" id="carrito-icono">
+    <img src="https://cdn-icons-png.freepik.com/512/9803/9803767.png" alt="Carrito" class="carrito-img">
+    <span id="contador-carrito">0</span>
+</div>
+
+<!-- Menú desplegable del carrito -->
+<div class="carrito-desplegable" id="carrito-desplegable">
+    <h3>🛍️ Carrito de Compras</h3>
+    <ul id="lista-carrito">
+        <!-- Elementos del carrito se agregarán aquí dinámicamente -->
+    </ul>
+    <div class="carrito-totales">
+        <p><strong>📊 Subtotal:</strong> $<span id="subtotal-carrito">0</span></p>
+        <p><strong>🏛️ IVA (16%):</strong> $<span id="impuestos-carrito">0</span></p>
+        <p><strong>🔧 Tarifa de servicio:</strong> $<span id="tarifa-servicio-carrito">0</span></p>
+        <p class="total-final"><strong>💰 Total final:</strong> $<span id="total-carrito">0</span></p>
+    </div>
+    <button class="btn" id="btn-comprar" style="display: none;" onclick="irAPagar()">🎟️ Comprar entradas</button>
+
+    <script>
+    function irAPagar() {
+        // Primero guardar el carrito
+        guardarCarrito();
+
+        // Luego redirigir
+        window.location.href = '@Url.Action("Compra", "Home")';
+    }
+    </script>
+</div>
+
+
+
+<!-- Contenedor principal del evento -->
+<main class="event-details-full">
+    <div class="event-header">
+        <h1>@Model.Titulo</h1>
+        <div class="event-meta">
+            <span class="event-category">@Model.Categoria</span>
+            <span class="event-rating">⭐ 4.8 (256 reseñas)</span>
+        </div>
+    </div>
+
+    <div class="event-content">
+        <div class="event-image-container">
+            <img src="@Model.Img" alt="@Model.Titulo" class="event-image">
+            <div class="event-highlights">
+                <div class="highlight-card">
+                    <span class="highlight-icon">📅</span>
+                    <div>
+                        <h4>Fecha</h4>
+                        <p>@Model.FechaInicio.ToString("dd/MM/yyyy")</p>
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <span class="highlight-icon">📍</span>
+                    <div>
+                        <h4>Lugar</h4>
+                        <p>@Model.Lugar</p>
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <span class="highlight-icon">⏰</span>
+                    <div>
+                        <h4>Hora</h4>
+                        <p>20:00 - 23:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="event-details">
+            <section class="event-description">
+ 
+                <h2>📝 Descripción del Evento</h2>
+                <p>@Model.Descripcion</p>
+            </section>
+
+            <section class="event-tickets">
+                <div style="display:flex; align-items:center;">
+                    <h2>🎟️ Entradas Disponibles:  </h2><h4 style="margin-left: 8px; margin-bottom: 16px;" id="entradas"></h4>
+                </div>
+           
+                <div class="ticket-grid">
+                    <div class="ticket-card">
+
+                        <div class="ticket-header">
+
+                            <div>
+                                <label id="zonas">Seleciona la zona</label>
+                                <select id="zonas-select" class="zonas-select"></select>
+                            </div>
+                            <div>
+                                <h3 id="nombreZona"></h3>
+                                <span class="ticket-price"></span>
+                            </div>
+
+                        </div>
+                        <p class="ticket-description">Acceso preferencial, asientos reservados y regalo de bienvenida.</p>
+                        <div class="ticket-actions" id="ticket-actions">
+                            <input type="number" class="cantidad" data-zona="Zona VIP" maxlength="1" min="1" value="1">
+                            <button class="btn-agregar" data-precio="50000" data-zona="Zona VIP">➕ Agregar</button>
+                            @*data-precio="50000" data-zona="Zona VIP"   data-zona="Zona VIP" *@
+                        </div>
+                    </div>
+
+                    <!-- Más zonas de tickets... -->
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <input type="hidden" id="evento_id" value="@Model.Id">
+</main>
+
+
+<div id="modalError" class="modal-error" style="display:none;">
+    <div class="modal-content-error">
+        <span id="cerrarModal" class="cerrar">&times;</span>
+        <p class="p-modal" id="mensajeError"></p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+
+        function mostrarModal(mensaje) {
+            document.getElementById("mensajeError").innerText = mensaje;
+            document.getElementById("modalError").style.display = "flex";
+        }
+
+        document.getElementById("cerrarModal").addEventListener("click", function () {
+            document.getElementById("modalError").style.display = "none";
+        });
+
+        window.addEventListener("click", function (event) {
+            const modal = document.getElementById("modalError");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        function extraerMonto(texto) {
+            const regex = /₡(\d+)(?:,\d+)?/;
+            const match = texto.match(regex);
+            if (match && match[1]) {
+                return parseInt(match[1], 10);
+            }
+            return null; // o 0 si preferís por defecto
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const selectZonas = document.getElementById("zonas-select");
+            const nombreZona = document.getElementById("nombreZona");
+            const precioZona = document.querySelector(".ticket-price");
+            const btnAgregar = document.querySelector(".btn-agregar");
+            const cantidad = document.querySelector(".cantidad");
+
+            selectZonas.addEventListener("change", function () {
+                const selectedOption = selectZonas.options[selectZonas.selectedIndex];
+                console.log(selectedOption.value, selectedOption.textContent)
+                const datazona = selectedOption.getAttribute("data-tipo");
+                const zonaPrecio = selectedOption.getAttribute("data-precio");
+                nombreZona.textContent = 'Zona ' + selectedOption.textContent;
+                const ticketactions = document.getElementById("ticket-actions");
+                const monto = extraerMonto(selectedOption.textContent);
+                btnAgregar.setAttribute("data-precio", monto);
+                btnAgregar.setAttribute("data-zona", `Zona ${selectedOption.value}`);
+                cantidad.setAttribute("data-zona", `Zona ${selectedOption.value}`);
+
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+                const eventoId = document.getElementById('evento_id').value;
+                const zonasResponse = await fetch(`/Home/ZonasEventos?eventoId=${encodeURIComponent(eventoId)}`, {
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const zonas = await zonasResponse.json();
+
+                const entradas = document.getElementById('entradas')
+                const zonasSelect = document.getElementById('zonas-select');
+                console.log(zonas)
+                // Aquí podrías llenar el select si quieres
+                if (zonas.success) {
+                    zonas.zonas.forEach(z => {
+                        //zonasSelect.innerHTML += `<option value="${z.Precio}">${z.Tipo} - $${z.Precio}</option>`
+                        //console.log(zonasSelect.innerHTML)
+                        const option = document.createElement('option');
+                        option.value = z.Tipo;
+                        option.textContent = `${z.Tipo} - ₡${z.Precio}`;
+                        zonasSelect.appendChild(option);
+                        entradas.innerText =' ' + z.Stock
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error al obtener zonas:', error);
+            }
+        });
+
+        // Recuperar carrito de sessionStorage o inicializarlo vacío
+        let carrito = JSON.parse(sessionStorage.getItem('carrito')) || [];
+        let total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+
+        // Función para actualizar el carrito en la UI y en sessionStorage
+        function actualizarCarrito() {
+            const listaCarrito = document.getElementById('lista-carrito');
+            const subtotalCarrito = document.getElementById('subtotal-carrito') || { textContent: '0' };
+            const impuestosCarrito = document.getElementById('impuestos-carrito') || { textContent: '0' };
+            const tarifaServicioCarrito = document.getElementById('tarifa-servicio-carrito') || { textContent: '0' };
+            const totalCarrito = document.getElementById('total-carrito') || { textContent: '0' };
+            const btnComprar = document.getElementById('btn-comprar');
+            const contadorCarrito = document.getElementById('contador-carrito');
+
+            listaCarrito.innerHTML = '';
+
+            let subtotal = 0;
+            let cantidadTotal = 0;
+
+            carrito.forEach((entrada, index) => {
+                const totalPorEntrada = entrada.cantidad * entrada.precio;
+                subtotal += totalPorEntrada;
+                cantidadTotal += entrada.cantidad;
+
+                const li = document.createElement('li');
+                li.innerHTML = `
+                                    ${entrada.zona} - ${entrada.cantidad} x $${entrada.precio} = $${totalPorEntrada}
+                                `;
+
+                // Botón "Cambiar" con estilo azul
+                const btnCambiar = document.createElement('button');
+                btnCambiar.textContent = 'Cambiar';
+                btnCambiar.style.backgroundColor = '#007bff';
+                btnCambiar.style.color = 'white';
+                btnCambiar.style.border = 'none';
+                btnCambiar.style.padding = '5px 10px';
+                btnCambiar.style.cursor = 'pointer';
+                btnCambiar.style.marginLeft = '10px';
+
+                btnCambiar.addEventListener('click', () => {
+                    abrirModalCambio(index);
+                });
+
+                // Botón "Eliminar"
+                const btnEliminar = document.createElement('button');
+                btnEliminar.textContent = 'Eliminar';
+                btnEliminar.style.marginLeft = '10px';
+                btnEliminar.addEventListener('click', () => {
+                    carrito.splice(index, 1);
+                    guardarCarrito();
+                    actualizarCarrito();
+                });
+
+                li.appendChild(btnCambiar);
+                li.appendChild(btnEliminar);
+                listaCarrito.appendChild(li);
+            });
+
+            // Cálculos de costos
+            const impuestos = subtotal * 0.16; // IVA 16%
+            const tarifaServicio = cantidadTotal * 5000; // Tarifa de servicio $5000 por entrada
+            const totalFinal = subtotal + impuestos + tarifaServicio;
+
+            // Actualizar la vista de costos
+            subtotalCarrito.textContent = subtotal.toFixed(2);
+            impuestosCarrito.textContent = impuestos.toFixed(2);
+            tarifaServicioCarrito.textContent = tarifaServicio.toFixed(2);
+            totalCarrito.textContent = totalFinal.toFixed(2);
+
+            contadorCarrito.textContent = carrito.length;
+            btnComprar.style.display = carrito.length > 0 ? 'inline-block' : 'none';
+        }
+        // Función para abrir el modal de cambio de cantidad - Corregida
+        function abrirModalCambio(index) {
+            const nuevaCantidad = prompt("Ingrese la nueva cantidad de boletos:", carrito[index].cantidad);
+            if (nuevaCantidad !== null && !isNaN(nuevaCantidad) && nuevaCantidad > 0) {  // Corregido
+                carrito[index].cantidad = parseInt(nuevaCantidad);
+                guardarCarrito();
+                actualizarCarrito();
+            } else if (nuevaCantidad !== null) {
+                alert("Por favor, ingrese un número válido.");
+            }
+        }
+
+        // Función para guardar el carrito - Asegurar el evento_id
+        function guardarCarrito() {
+            // Guardar en sessionStorage del navegador
+            sessionStorage.setItem('carrito', JSON.stringify(carrito));
+
+            // También guardar el ID del evento
+            const eventoId = document.getElementById('evento_id').value;
+            sessionStorage.setItem('evento_id', eventoId);
+
+            // Enviar datos al servidor via AJAX
+            $.ajax({
+                url: '@Url.Action("GuardarCarritoSession", "Home")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    carrito: carrito,
+                    eventoId: eventoId
+                }),
+                success: function() {
+                    console.log('Carrito guardado en sesión del servidor');
+                }
+            });
+        }
+
+        // Agregar entradas al carrito
+        document.querySelectorAll('.btn-agregar').forEach(button => {
+            button.addEventListener('click', () => {
+                const zona = button.getAttribute('data-zona');
+                const precio = parseInt(button.getAttribute('data-precio'));
+                const cantidad = parseInt(button.parentElement.querySelector('.cantidad').value);
+
+                // Verificar si la zona ya está en el carrito
+                const entradaExistente = carrito.find(entrada => entrada.zona === zona);
+
+
+                let totalUnidades = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+                if (totalUnidades === 4) {
+                    mostrarModal("Solo se permite 4 entradas por cliente")
+                    return
+                }
+                console.log(totalUnidades)
+
+                if (entradaExistente) {
+                    entradaExistente.cantidad += cantidad;
+                } else {
+                    carrito.push({ zona, precio, cantidad });
+                }
+
+                total += precio * cantidad;
+                guardarCarrito();
+                actualizarCarrito();
+            });
+        });
+
+        // Mostrar/ocultar el menú desplegable del carrito
+        document.getElementById('carrito-icono').addEventListener('click', () => {
+            const carritoDesplegable = document.getElementById('carrito-desplegable');
+            carritoDesplegable.style.display = carritoDesplegable.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Cargar el carrito al inicio
+        actualizarCarrito();
+    </script>
+}

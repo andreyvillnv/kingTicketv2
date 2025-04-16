@@ -1,0 +1,355 @@
+
+@Styles.Render("~/Content/empleadosSistema.css")
+
+<style>
+    .modal {
+        display: flex;
+        z-index: 1;
+        background-color: rgba(0, 0, 0, 0.5); /* fondo oscuro transparente */
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+
+    .content {
+        display: flex;
+        top: 35%;
+        left: 35%;
+        background-color: rgba(0, 0, 0, 0.5); /* fondo oscuro transparente */
+        width: 100vw;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+
+    .modal-content {
+        background-color: rgb(22, 22, 22);
+        padding: 20px;
+        border-radius: 10px;
+        width: 400px;
+    }
+
+    label {
+        background-color: rgb(22, 22, 22);
+    }
+
+    .modal-content input {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 5px;
+    }
+
+    .modal-content button {
+        margin-top: 10px;
+        padding: 5px 10px;
+    }
+
+    .btn-modal {
+        background-color: #bff747;
+        border: none;
+        border-radius: 5px;
+        color: black;
+        font-weight: bold;
+    }
+
+    h2 {
+        color: #bff747;
+        background-color: rgb(22, 22, 22);
+    }
+
+    input:focus {
+        outline: none;
+        border: none;
+    }
+
+    .modal-content input {
+        background-color: #49454f;
+        border-radius: 5px;
+        width: 180px;
+        height: 24px;
+        border: 1px solid #fff;
+    }
+</style>
+
+
+<img class="logo" src="~/Content/images/logo.png" alt="logo">
+<div class="titulo">
+    <h1>Empleados del sistema</h1>
+</div>
+
+
+
+
+<main class="sectionEmpleados">
+    <section class="section-PF">
+        <table>
+            <thead>
+                <tr class="tablaEmpleados">
+                    <th class="pr">ID</th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Cédula</th>
+                    <th>Correo</th>
+                    <th>Contraseña</th>
+                    <th>Celular</th>
+                    <th>Dirección</th>
+                    <th class="ur">Rol</th>
+                    <th class="r-crear"><button class="btn-crear" onclick="crearEmpleado()">Crear empleado</button></th>
+                    
+                </tr>
+            </thead>
+            <tbody class="cuerpoTablaEmpleados" id="cuerpotablaEmpleados">
+            </tbody>
+        </table>
+    </section>
+</main>
+
+
+<div id="modalEditar" class="modal" style="display:none">
+    <div class="content">
+        <div class="modal-content">
+            <h2>Editar Empleado</h2>
+            <input type="hidden" id="editId">
+            <label>Nombre:</label>
+            <input type="text" id="editNombre">
+            <label>Apellidos:</label>
+            <input type="text" id="editApellidos">
+            <label>Cédula:</label>
+            <input type="text" id="editCedula">
+            <label>Correo:</label>
+            <input type="email" id="editCorreo">
+            <label>Contraseña:</label>
+            <input type="password" id="editContraseña">
+            <label>Celular:</label>
+            <input type="text" id="editCelular">
+            <label>Dirección:</label>
+            <input type="text" id="editDireccion">
+            <label>Rol:</label>
+            <input type="text" id="editRol">
+            <button class="btn-modal" onclick="guardarEdicion()">Guardar</button>
+            <button class="btn-modal" onclick="cerrarModal()">Cancelar</button>
+        </div>
+    </div>
+
+</div>
+
+
+<div id="modalCrear" class="modal" style="display:none">
+    <div class="content">
+        <div class="modal-content">
+            <h2>Crear Empleado</h2>
+         
+            <label>Nombre:</label>
+            <input type="text" id="crearNombre">
+            <label>Apellidos:</label>
+            <input type="text" id="crearApellidos">
+            <label>Cédula:</label>
+            <input type="text" id="crearCedula">
+            <label>Correo:</label>
+            <input type="email" id="crearCorreo">
+            <label>Contraseña:</label>
+            <input type="password" id="crearContraseña">
+            <label>Celular:</label>
+            <input type="text" id="crearCelular">
+            <label>Dirección:</label>
+            <input type="text" id="crearDireccion">
+            <label>Rol:</label>
+            <input type="text" id="crearRol">
+            <button class="btn-modal" onclick="crearNuevoEmpleado()">Guardar</button>
+            <button class="btn-modal" onclick="cerrarModal()">Cancelar</button>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+
+
+    <script>
+        window.onclick = function (event) {
+            var modal = document.getElementById("modalCrear");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+        function crearEmpleado() {
+            document.getElementById("modalCrear").style.display = "block";
+        }
+
+        function cerrarModal() {
+            document.getElementById("modalEditar").style.display = "none";
+            document.getElementById("modalCrear").style.display = "none";
+        }
+        function abrirModal(id) {
+            // Mostrar el modal
+            document.getElementById("modalEditar").style.display = "block";
+
+            // Buscar la fila que contiene ese ID
+            const fila = Array.from(document.querySelectorAll("#cuerpotablaEmpleados tr"))
+                .find(tr => tr.querySelector("td input").value == id);
+
+            if (!fila) return;
+
+            // Obtener todos los inputs de esa fila
+            const celdas = fila.querySelectorAll("td input");
+
+            // Asignar los valores al modal
+            document.getElementById("editId").value = celdas[0].value;
+            document.getElementById("editNombre").value = celdas[1].value;
+            document.getElementById("editApellidos").value = celdas[2].value;
+            document.getElementById("editCedula").value = celdas[3].value;
+            document.getElementById("editCorreo").value = celdas[4].value;
+            document.getElementById("editContraseña").value = celdas[5].value;
+            document.getElementById("editCelular").value = celdas[6].value;
+            document.getElementById("editDireccion").value = celdas[7].value;
+            document.getElementById("editRol").value = celdas[8].value;
+        }
+
+        async function borrarEmpleado(id) {
+            const fila = Array.from(document.querySelectorAll("#cuerpotablaEmpleados tr"))
+                .find(tr => tr.querySelector("td input").value == id);
+
+            if (!fila) return;
+
+            // Obtener todos los inputs de esa fila
+            const celdas = fila.querySelectorAll("td input");
+            const idempleados = celdas[0].value;
+            if (idempleados) {
+
+
+            }
+            await fetch('/Home/BorrarEmpleado', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ idempleados })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Empleado eliminado correctamente");
+                        location.reload();
+                    } else {
+                        alert("Error al editar el empleado");
+                    }
+                });
+
+        }
+
+        async function crearNuevoEmpleado() {
+        
+            const nombre = document.getElementById("crearNombre").value;
+            const apellidos = document.getElementById("crearApellidos").value;
+            const cedula = document.getElementById("crearCedula").value;
+            const correo = document.getElementById("crearCorreo").value;
+            const contraseña = document.getElementById("crearContraseña").value;
+            const celular = document.getElementById("crearCelular").value;
+            const direccion = document.getElementById("crearDireccion").value;
+            const rol = document.getElementById("crearRol").value;
+            await fetch('/Home/CrearEmpleado', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  
+                    nombre,
+                    apellidos,
+                    cedula,
+                    correo,
+                    contraseña,
+                    celular,
+                    direccion,
+                    rol
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Empleado creado correctamente");
+                        location.reload();
+                    } else {
+                        alert("Error al editar el empleado");
+                    }
+                });
+        }
+
+
+
+        async function guardarEdicion() {
+            const idempleados = document.getElementById("editId").value;
+            const nombre = document.getElementById("editNombre").value;
+            const apellidos = document.getElementById("editApellidos").value;
+            const cedula = document.getElementById("editCedula").value;
+            const correo = document.getElementById("editCorreo").value;
+            const contraseña = document.getElementById("editContraseña").value;
+            const celular = document.getElementById("editCelular").value;
+            const direccion = document.getElementById("editDireccion").value;
+            const rol = document.getElementById("editRol").value;
+            await fetch('/Home/GuardarEmpleado', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    idempleados,
+                    nombre,
+                    apellidos,
+                    cedula,
+                    correo,
+                    contraseña,
+                    celular,
+                    direccion,
+                    rol
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Empleado editado correctamente");
+                        location.reload();
+                    } else {
+                        alert("Error al editar el empleado");
+                    }
+                });
+        }
+
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            await fetch('/Home/EmpleadosSistema')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Error al obtener los empleados");
+                    }
+                    return response.json();
+                }).then(empleados => {
+                    const cuerpo = document.getElementById("cuerpotablaEmpleados");
+                    cuerpo.innerHTML = "";
+
+                    empleados.forEach(e => {
+                        cuerpo.innerHTML += `<tr class="cuerpoTabla">
+                                    <td><input type="text" value="${e.IdEmpleado}" class="valoresTabla" readonly></td>
+                                    <td><input type="text" value="${e.Nombre}" class="valoresTabla" readonly></td>
+                                    <td><input type="text" value="${e.Apellidos}" class="valoresTabla" readonly></td>
+                                    <td><input type="text" value="${e.Cedula}" class="valoresTabla" readonly></td>
+                                    <td><input type="text" value="${e.Correo}" class="valoresTabla correo" readonly></td>
+                                    <td><input type="password" value="${e.Contrasena}" class="valoresTabla" readonly></td>
+                                    <td><input type="text" value="${e.Celular}" class="valoresTabla" readonly></td>
+                                    <td><input type="text" value="${e.Direccion}" class="valoresTabla" readonly></td>
+                                    <td><input type="text" value="${e.Rol}" class="valoresTabla" readonly></td>
+                                    <td><input type="button" value="Editar" class="valoresTabla btn-editar" onclick="abrirModal(${e.IdEmpleado})"></td>
+                                    <td><input type="button" value="Borrar" class="valoresTabla btn-borrar" onclick="borrarEmpleado(${e.IdEmpleado})"></td>
+                                </tr>`;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error al cargar los empleados:", error);
+                });
+        });
+
+
+
+    </script>
+}

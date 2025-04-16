@@ -1,0 +1,286 @@
+﻿/* Reset y estilos base */
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #111;
+    color: white;
+    line-height: 1.6;
+}
+
+/* Contenedor principal */
+.tickets-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.hero-events {
+    position: relative;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/images/concierto.jpg') center/cover no-repeat;
+    text-align: center;
+    padding: 80px 20px;
+    color: white;
+    border-radius: 0 0 20px 20px;
+    margin-bottom: 30px;
+}
+
+.hero-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #BFF747;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* Barra de búsqueda */
+.search-container {
+    display: flex;
+    justify-content: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#search-bar {
+    flex: 1;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 30px 0 0 30px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.search-btn {
+    background-color: #BFF747;
+    color: black;
+    border: none;
+    padding: 0 20px;
+    border-radius: 0 30px 30px 0;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+    .search-btn:hover {
+        background-color: #a5e02e;
+    }
+
+/* Navegación de categorías */
+.event-categories {
+    margin-bottom: 40px;
+}
+
+    .event-categories ul {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        list-style: none;
+        padding: 0;
+    }
+
+    .event-categories li {
+        background: #222;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+    }
+
+        .event-categories li:hover {
+            background: #333;
+        }
+
+        .event-categories li.active {
+            background: #BFF747;
+            color: black;
+        }
+
+    .event-categories a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: inherit;
+        text-decoration: none;
+        padding: 10px 20px;
+        font-weight: 500;
+    }
+
+/* Grid de eventos */
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+/* Tarjetas de evento */
+.event-card {
+    background: #222;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(191, 247, 71, 0.1);
+    }
+
+.event-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #ff4757;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.event-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+}
+
+.event-info {
+    padding: 20px;
+}
+
+.event-date {
+    color: #BFF747;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.event-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+}
+
+.event-description {
+    color: #aaa;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.event-location {
+    color: #ccc;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.event-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.event-price {
+    font-weight: bold;
+    color: #BFF747;
+}
+
+.btn-ticket {
+    background: #BFF747;
+    color: black;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+    .btn-ticket:hover {
+        background: #a5e02e;
+        transform: translateY(-2px);
+    }
+
+/* Sin eventos */
+.no-events {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+}
+
+    .no-events i {
+        font-size: 3rem;
+        color: #BFF747;
+        margin-bottom: 20px;
+    }
+
+    .no-events h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .no-events p {
+        color: #aaa;
+        margin-bottom: 20px;
+    }
+
+/* Botón de regresar */
+.back-container {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #BFF747;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: 2px solid #BFF747;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+    .btn-back:hover {
+        background: rgba(191, 247, 71, 0.1);
+    }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .event-categories ul {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+}

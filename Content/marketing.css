@@ -1,0 +1,139 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #111;
+    color: white;
+    font-size: 16px;
+}
+
+h1 {
+    position: absolute;
+    top: 25%;
+    font-weight: bold;
+    font-size: 32px;
+    background-color: #bff747;
+    color: rgb(0, 0, 0);
+}
+
+.titulo {
+    display: flex;
+    justify-content: center;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    margin-top: 25px;
+    width: 405px;
+    height: 59px;
+    background-color: #bff747;
+}
+
+.logo {
+    width: 93px;
+    margin-top: 25px;
+}
+
+.sectionMercadeo,
+.mensaje {
+    display: flex;
+    flex-direction: column;
+    margin-right: 28px;
+    align-content: space-around;
+}
+
+.formulario, .formulario-c {
+    width: 850;
+    display: flex;
+    align-content: space-around;
+}
+
+.section-m {
+    padding: 12px;
+    margin: auto;
+    margin-top: 50px; /* Menos espacio arriba */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid white;
+    border-radius: 5px;
+    width: 900px;
+}
+
+label {
+    margin-bottom: 8px;
+}
+
+input,
+select,
+option {
+    margin-bottom: 8px;
+    cursor: pointer;
+    padding-left: 10px;
+    background-color: #242424;
+    border: 1px solid white;
+    width: 200px;
+    height: 28px;
+    border-radius: 5px;
+}
+
+    input:focus {
+        outline: none;
+        border: none;
+    }
+
+textarea {
+    padding-top: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    padding-left: 10px;
+    background-color: #242424;
+    border: 1px solid white;
+    height: 200px;
+    width: 350px;
+    border-radius: 5px;
+}
+
+.mesaje-c {
+    height: 150px;
+}
+
+.codigo {
+    width: 350px;
+}
+
+textarea:focus {
+    outline: none;
+    border: none;
+}
+
+.enviar {
+    background-color: #bff747;
+    margin-top: 26px;
+    width: 80px;
+    width: 200px;
+    color: black;
+    border: none;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+.descuento {
+    display: flex;
+    flex-direction: row;
+    gap: 38px; /* Espacio entre los elementos */
+    margin-bottom: 16px;
+}
+
+    .descuento > div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .descuento input, .descuento select {
+        width: 150px;
+    }

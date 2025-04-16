@@ -1,0 +1,135 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #111;
+    color: white;
+    font-size: 16px;
+}
+
+h1 {
+    position: absolute;
+    top: 25%;
+    font-weight: bold;
+    font-size: 32px;
+    background-color: #bff747;
+    color: rgb(0, 0, 0);
+}
+
+.titulo {
+    display: flex;
+    justify-content: center;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    margin-top: 25px;
+    width: 405px;
+    height: 59px;
+    background-color: #bff747;
+}
+
+.logo {
+    width: 93px;
+    margin-top: 25px;
+}
+
+.section-PF {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pregunta {
+    padding: 14px;
+    width: 1000px;
+    border: 1px solid #49454f;
+    border-radius: 5px;
+    margin: 7px 7px;
+}
+
+    .pregunta h2 {
+        margin-bottom: 14px;
+        color: #bff747;
+    }
+
+.soporte {
+    display: flex;
+    flex-direction: column;
+    width: 310px;
+    border: 1px solid #49454f;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    right: 5%;
+    bottom: 25%;
+}
+
+.asunto,
+.correo {
+    height: 28px;
+}
+
+.mensaje {
+    text-align: start;
+}
+
+.asunto,
+.mensaje,
+.correo {
+    border-radius: 5px;
+    background-color: #1e1e1e;
+    border: 1px solid #49454f;
+}
+
+.soporte label {
+    margin: 14px 14px;
+}
+
+.mensaje {
+    height: 250px;
+    text-align: left;
+    resize: none;
+    padding: 8px;
+}
+
+input {
+    cursor: pointer;
+    padding-left: 10px;
+}
+
+    input:focus {
+        outline: none;
+        border: none;
+    }
+
+textarea:focus {
+    outline: none;
+    border: none;
+}
+
+.enviar {
+    border: none;
+    height: 28px;
+    margin-top: 7px;
+    border-radius: 5px;
+    background: #bff747;
+    color: rgb(0, 0, 0);
+}
+
+#mostrar {
+    cursor: pointer;
+    width: 125px;
+    position: absolute;
+    right: 15%;
+}
+
+    #mostrar:hover {
+        box-shadow: #9b5f5f;
+    }
+
+#formCorreo {
+    display: none;
+}

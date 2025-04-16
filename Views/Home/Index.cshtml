@@ -1,0 +1,208 @@
+﻿@model IEnumerable<ProyectoRelampago.Models.Evento>
+
+@Styles.Render("~/Content/index.css")
+
+<!-- Carrusel de eventos -->
+<div class="hero-carousel">
+    <div class="carousel-track" id="carouselTrack">
+        @foreach (var evento in Model.Take(5))
+        {
+            <div class="carousel-slide" style="background-image: url('@evento.Img')">
+                <div class="carousel-overlay"></div>
+                <div class="carousel-content">
+                    <h2 class="hero-subtitle">Evento Destacado</h2>
+                    <h1 class="hero-title">@evento.Titulo</h1>
+                    <p class="hero-text">@evento.Lugar • @evento.FechaInicio.ToString("dd/MM/yyyy")</p>
+                    <div class="hero-cta">
+                        <a href="@Url.Action("evedetalles", "Home", new { id = evento.Id })" class="btn btn-hero">
+                            <i class="fas fa-ticket-alt"></i> Comprar Entradas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="carousel-nav" id="carouselNav">
+        @{
+            int index = 0;
+            foreach (var evento in Model.Take(5))
+            {
+                <div class="carousel-dot @(index == 0 ? "active" : "")" data-index="@index"></div>
+                index++;
+            }
+        }
+    </div>
+</div>
+
+<!-- Barra de búsqueda -->
+<section class="search-container" id="searchSection">
+    <input type="text" id="search-bar" placeholder="Buscar por evento o lugar...">
+    <button class="search-btn" id="searchButton">
+        <i class="fas fa-search"></i>
+    </button>
+</section>
+
+<!-- Sección de eventos -->
+<section class="events-section" id="eventos">
+    <div class="section-header">
+        <h2 class="section-title">Eventos Disponibles</h2>
+        <div class="event-filters">
+            <button class="filter-btn active" data-filter="todos">Todos</button>
+            <button class="filter-btn" data-filter="conciertos">Conciertos</button>
+            <button class="filter-btn" data-filter="deportes">Deportes</button>
+            <button class="filter-btn" data-filter="teatro">Teatro</button>
+        </div>
+    </div>
+
+    <div class="events-grid" id="eventsGrid">
+        @if (Model.Any())
+        {
+            foreach (var evento in Model)
+            {
+                <div class="event-card" data-category="@(evento.Categoria ?? "todos")">
+                    <div class="event-badge">Más vendido</div>
+                    <img src="@evento.Img" alt="@evento.Titulo" class="event-image">
+                    <div class="event-info">
+                        <h3 class="event-title">@evento.Titulo</h3>
+                        <div class="event-meta">
+                            <span class="event-location">
+                                <i class="fas fa-map-marker-alt"></i> @evento.Lugar
+                            </span>
+                            <span class="event-date">
+                                <i class="far fa-calendar-alt"></i> @evento.FechaInicio.ToString("dd/MM/yyyy")
+                                @if (evento.FechaFin.HasValue)
+                                {
+                                    <text> - @evento.FechaFin.Value.ToString("dd/MM/yyyy")</text>
+                                }
+                            </span>
+                        </div>
+                        <div class="event-footer">
+                            <a href="@Url.Action("evedetalles", "Home", new { id = evento.Id })" class="btn btn-event">
+                                <i class="fas fa-arrow-right"></i> Detalles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-events">
+                <i class="far fa-calendar-times"></i>
+                <h3>No hay eventos disponibles</h3>
+                <p>Pronto tendremos más eventos para ti</p>
+            </div>
+        }
+    </div>
+</section>
+
+<div class="back-container">
+    <a href="@Url.Action("Menu", "Home")" class="btn btn-back">
+        <i class="fas fa-arrow-left"></i> Volver al menú principal
+    </a>
+</div>
+
+<div class="back-container">
+    <a href="@Url.Action("MenuAdmin", "Home")" class="btn btn-back">
+        <i class="fas fa-arrow-left"></i> Ir a menu de Administracion
+    </a>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Carrusel automático
+            const carouselTrack = document.getElementById('carouselTrack');
+            const dots = document.querySelectorAll('.carousel-dot');
+            const slides = document.querySelectorAll('.carousel-slide');
+            let currentIndex = 0;
+            const slideCount = slides.length;
+
+            function goToSlide(index) {
+                currentIndex = index;
+                carouselTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+                dots.forEach(dot => dot.classList.remove('active'));
+                dots[currentIndex].classList.add('active');
+            }
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', function () {
+                    const slideIndex = parseInt(this.getAttribute('data-index'));
+                    goToSlide(slideIndex);
+                });
+            });
+
+            let interval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % slideCount;
+                goToSlide(currentIndex);
+            }, 5000);
+
+            carouselTrack.addEventListener('mouseenter', () => {
+                clearInterval(interval);
+            });
+
+            carouselTrack.addEventListener('mouseleave', () => {
+                interval = setInterval(() => {
+                    currentIndex = (currentIndex + 1) % slideCount;
+                    goToSlide(currentIndex);
+                }, 5000);
+            });
+
+            // Barra de búsqueda - Funcionalidad mejorada
+            const searchSection = document.getElementById('searchSection');
+            const searchBar = document.getElementById('search-bar');
+            const searchButton = document.getElementById('searchButton');
+            const eventCards = document.querySelectorAll('.event-card');
+
+            // Alternar visibilidad de la barra de búsqueda
+            searchButton.addEventListener('click', function () {
+                searchSection.classList.toggle('active');
+                if (searchSection.classList.contains('active')) {
+                    searchBar.focus();
+                }
+            });
+
+            // Filtrar eventos al escribir
+            searchBar.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+
+                eventCards.forEach(card => {
+                    const title = card.querySelector('.event-title').textContent.toLowerCase();
+                    const location = card.querySelector('.event-location').textContent.toLowerCase();
+                    const matchesSearch = title.includes(searchTerm) || location.includes(searchTerm);
+
+                    if (searchTerm === '' || matchesSearch) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // Filtrar por categoría
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const filter = this.getAttribute('data-filter');
+
+                    // Actualizar botones activos
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Filtrar eventos
+                    eventCards.forEach(card => {
+                        const category = card.getAttribute('data-category');
+
+                        if (filter === 'todos' || category === filter) {
+                            card.style.display = 'flex';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

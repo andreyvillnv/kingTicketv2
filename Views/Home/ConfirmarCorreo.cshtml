@@ -1,0 +1,57 @@
+@Styles.Render("~/Content/login.css")
+@{
+    ViewBag.Title = "Confirmación de Cuenta";
+    var email = Request.QueryString["email"];
+}
+
+<main>
+    <img class="logo" src="~/Content/images/logo.png" alt="logo">
+    <div class="titulo">
+        <h1>Comprobar cuenta</h1>
+    </div>
+
+
+    <form method="post" id="loginForm" class="form-login">
+        <!-- formulario de datos personales -->
+        <section class="datos-login">
+            <div class="ingreso-login">
+                <div>
+                    <h2>Verificando tu cuenta...</h2>
+                    <p id="estado">Por favor espera mientras confirmamos tu correo.</p>
+                </div>
+            </div>
+            <a href="~/Home/Index">Ir al inicio</a>
+        </section>
+    </form>
+
+
+</main>
+
+
+@section Scripts {
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const email = "@email";
+
+        fetch("/Home/ComprobarCuenta", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById("estado").innerText = "¡Tu cuenta ha sido verificada correctamente!";
+            } else {
+                document.getElementById("estado").innerText = "Hubo un problema al verificar tu cuenta: " + (data.mensaje || "");
+            }
+        })
+        .catch(err => {
+            console.error("Error:", err);
+            document.getElementById("estado").innerText = "Error al verificar la cuenta.";
+        });
+    });
+    </script>
+}

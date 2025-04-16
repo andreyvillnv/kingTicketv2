@@ -1,0 +1,81 @@
+﻿@model List<ProyectoRelampago.Models.Evento>
+
+@Styles.Render("~/Content/noti.css")
+
+<link rel="stylesheet" href="~/css/noti.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<main class="tickets-container">
+    <!-- Hero Section -->
+    <section class="hero-events">
+        <div class="hero-content">
+            <h1>Próximos Eventos</h1>
+            <p>Descubre los mejores eventos y consigue tus entradas</p>
+
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Buscar eventos..." />
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Navigation -->
+    <nav class="event-categories">
+        <ul>
+            <li class="active"><a href="#"><i class="fas fa-music"></i> Conciertos</a></li>
+            <li><a href="#"><i class="fas fa-theater-masks"></i> Teatro</a></li>
+            <li><a href="#"><i class="fas fa-running"></i> Deportes</a></li>
+            <li><a href="#"><i class="fas fa-graduation-cap"></i> Conferencias</a></li>
+            <li><a href="#"><i class="fas fa-utensils"></i> Gastronomía</a></li>
+        </ul>
+    </nav>
+
+    <!-- Event Cards -->
+    <section class="events-grid">
+        @if (Model.Any())
+        {
+            foreach (var evento in Model)
+            {
+                <div class="event-card">
+                    <div class="event-badge">🔥 Popular</div>
+                    <img src="@evento.Img" alt="@evento.Titulo" class="event-image" />
+                    <div class="event-info">
+                        <div class="event-date">
+                            <i class="far fa-calendar-alt"></i>
+                            @evento.FechaInicio.ToString("dd/MM/yyyy")
+                        </div>
+                        <h3>@evento.Titulo</h3>
+                        <p class="event-description">@evento.Descripcion</p>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            @evento.Lugar
+                        </div>
+                        <div class="event-footer">
+                            <span class="event-price">Desde $50.000</span>
+                            <a href="@Url.Action("Detalles", "Home", new { id = evento.Id })" class="btn-ticket">
+                                <i class="fas fa-ticket-alt"></i> Ver entradas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-events">
+                <i class="far fa-calendar-times"></i>
+                <h3>No hay eventos próximos</h3>
+                <p>No encontramos eventos en los próximos 30 días</p>
+                <a href="@Url.Action("Menu", "Home")" class="btn">Explorar todos los eventos</a>
+            </div>
+        }
+    </section>
+
+    <div class="back-container">
+        <a href="@Url.Action("Menu", "Home")" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Regresar a los Eventos
+        </a>
+    </div>
+</main>

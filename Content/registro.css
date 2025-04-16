@@ -1,0 +1,181 @@
+/* Reset básico */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    background-color: #111;
+    color: white;
+    font-size: 16px;
+}
+
+form {
+    margin-top: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    position: absolute;
+    top: 25%;
+    font-weight: bold;
+    font-size: 32px;
+    background-color: #bff747;
+    color: rgb(0, 0, 0);
+}
+
+input {
+    width: 250px;
+    height: 27px;
+    border-radius: 5px;
+    background-color: #1E1E1E;
+    border: 1px solid #49454F;
+    padding-left: 10px;
+}
+.buscar {
+    background-color: #bff747;
+    color: #000000;
+    width: 137px;
+    height: 35px;
+    font-weight: bold;
+    font-size: 20px;
+    margin-left: 50px;
+    margin-top: 20px;
+    border: none;
+    border-radius:5px;
+}
+select {
+    width: 45px;
+    height: 27px;
+    border-radius: 5px;
+    background-color: #1E1E1E;
+    border: 1px solid #49454F;
+}
+
+    select :focus {
+        outline: none;
+        border: none;
+    }
+
+input:focus {
+    outline: none;
+    border: none;
+}
+
+.logo {
+    width: 93px;
+    margin-top: 25px;
+}
+
+.numero-cvv {
+    margin-right: 70px;
+}
+
+
+.cvv input {
+    width: 45px;
+    height: 27px;
+    border-radius: 5px;
+    background-color: #1E1E1E;
+    border: 1px solid #49454F;
+    
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.cvv input:focus {
+    outline: none;
+    border: none;
+}
+
+label {
+    margin-bottom: 8px;
+}
+/* background: #BFF747 */
+.titulo {
+    display: flex;
+    justify-content: center;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    margin-top: 25px;
+    width: 405px;
+    height: 59px;
+    background-color: #bff747;
+}
+
+.datos-personales {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 733px;
+    height: 330px;
+    border: 1px solid #49454F;
+    border-radius: 5px;
+}
+
+h2 {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-right: 370px;
+}
+
+.datos-tarjeta {
+    display: flex;
+    width: 733px;
+    height: 230px;
+}
+
+.tarjeta {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 603px;
+    height: 200px;
+    border: 1px solid #49454F;
+    border-radius: 5px;
+}
+
+.registro {
+    display: flex;
+    justify-content: center;
+}
+
+    .registro div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+.btn-registrar {
+    background-color: #bff747;
+    color: #000000;
+    width: 137px;
+    height: 35px;
+    font-weight: bold;
+    font-size: 20px;
+    margin-left: 50px;
+    margin-top: 20px;
+}
+
+.btn-terminos :nth-child(1) {
+    background-color: #1E1E1E;
+    border: 1px solid #49454F;
+    ;
+    width: 14px;
+    position: relative;
+    top: 3%;
+    margin-left: 50px;
+    margin-right: 5px;
+    margin-top: 100px;
+}

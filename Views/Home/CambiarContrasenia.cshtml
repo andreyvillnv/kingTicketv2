@@ -1,0 +1,26 @@
+
+@Styles.Render("~/Content/cambiar-pass.css")
+
+
+<main>
+    <img  src="~/Content/images/logo.png" class="logo" alt="logo">
+    <div class="titulo">
+        <h1>Recuperar contraseña</h1>
+    </div>
+    <form action="/nuevo-pass" method="post" class="form-recuperar">
+        <section class="datos-recuperar">
+            <div class="ingreso-recuperar">
+                <div>
+                    <label for="pass">Ingresa una nueva contraseña</label>
+                    <input type="password" id="pass" name="pass" required>
+                </div>
+
+                <div>
+                    <label for="pass">Repita la contraseña</label>
+                    <input type="password" id="pass" name="pass" required>
+                </div>
+                <input type="submit" class="btn-enviar" value="Enviar">
+            </div>
+        </section>
+    </form>
+</main>

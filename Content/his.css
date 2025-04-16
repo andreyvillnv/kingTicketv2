@@ -1,0 +1,111 @@
+﻿/* Estilos generales */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #000; /* Fondo negro */
+    color: white; /* Texto blanco */
+    min-height: 100vh; /* Ocupa toda la altura de la pantalla */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor principal */
+.historial-container {
+    flex: 1; /* Ocupa todo el espacio disponible */
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+    .historial-container h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        color: #BFF747; /* Verde brillante para el título */
+    }
+
+/* Filtros de categorías */
+.filtros {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.btn-filtro {
+    background-color: #222; /* Fondo gris oscuro */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+    .btn-filtro.active {
+        background-color: #BFF747; /* Verde brillante */
+        color: black;
+    }
+
+    .btn-filtro:hover {
+        background-color: #444; /* Gris más claro al pasar el mouse */
+    }
+
+/* Tabla de compras */
+.lista-compras {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.tabla-ventas {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #444; /* Borde alrededor de la tabla */
+}
+
+    .tabla-ventas th, .tabla-ventas td {
+        padding: 12px;
+        text-align: left;
+        font-size: 1rem;
+    }
+
+    .tabla-ventas th {
+        background-color: #333; /* Fondo oscuro para los encabezados */
+        color: #BFF747; /* Verde brillante para los encabezados */
+        font-weight: bold;
+    }
+
+    .tabla-ventas tr:nth-child(even) {
+        background-color: #222; /* Fondo oscuro para las filas pares */
+    }
+
+    .tabla-ventas tr:nth-child(odd) {
+        background-color: #111; /* Fondo más oscuro para las filas impares */
+    }
+
+    .tabla-ventas tr:hover {
+        background-color: #444; /* Fondo gris al pasar el mouse sobre una fila */
+    }
+
+    .tabla-ventas td {
+        color: white; /* Texto blanco */
+        border-top: 1px solid #444; /* Borde superior para las celdas */
+    }
+
+/* Estilo de botones de acción */
+.btn-detalles {
+    background-color: #BFF747; /* Verde brillante */
+    color: black;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+    .btn-detalles:hover {
+        background-color: #9bdb36; /* Verde más claro al pasar el mouse */
+    }

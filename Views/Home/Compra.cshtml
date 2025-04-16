@@ -1,0 +1,445 @@
+﻿@model ProyectoRelampago.Models.CompraViewModel
+
+@Styles.Render("~/Content/Compra.css")
+
+
+<style>
+    .modal {
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-contenido {
+        background-color: white;
+        margin: 15% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+        text-align: center;
+    }
+
+    .modal-contenido p {
+        color: black;
+    }
+
+        .modal-contenido span {
+            color: orangered;
+        }
+</style>
+<!-- Contador de tiempo -->
+<div class="time-counter">
+    <i class="fas fa-clock"></i>
+    <span id="contador">10:00</span>
+</div>
+
+<!-- Contenedor principal -->
+<main class="compra-container">
+    <div class="compra-grid">
+        <!-- Columna izquierda - Información del cliente -->
+        <div class="compra-columna">
+            <!-- Sección de información del cliente -->
+            <section class="customer-info">
+                <div class="section-header">
+                    <i class="fas fa-user-tie"></i>
+                    <h2>Información del Cliente</h2>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <span class="info-label">Correo Electrónico</span>
+                            <span class="info-value" id="customer-email">@Model.ClienteEmail</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-user"></i>
+                        <div>
+                            <span class="info-label">Nombre Completo</span>
+                            <span class="info-value" id="customer-name">@Model.ClienteNombre</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-id-card"></i>
+                        <div>
+                            <span class="info-label">Identificación</span>
+                            <span class="info-value" id="customer-id">@Model.ClienteIdentificacion</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección de pago -->
+            <section class="payment-section">
+                <div class="section-header">
+                    <i class="fas fa-credit-card"></i>
+                    <h2>Método de Pago</h2>
+                </div>
+                @*@using (Html.BeginForm("ProcesarPago", "Home", FormMethod.Post, new { id = "form-pago" }))
+                {*@
+                    @*@Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.EventoId)*@
+
+                    @*@Html.HiddenFor(m => m.ProteccionReembolso, new { id = "proteccion-reembolso" })*@
+
+            <form id="form-pago">
+                <input type="hidden" id="proteccion-reembolso" name="ProteccionReembolso" value="false" />
+                <input type="hidden" id="evento-id" name="EventoId" value="@Model.EventoId" />  
+                <div class="form-group">
+                    <label for="numero-tarjeta">
+                        <i class="far fa-credit-card"></i> Número de Tarjeta
+                    </label>
+                    <input type="text" id="numero-tarjeta" name="NumeroTarjeta" placeholder="1234 5678 9012 3456" class="card-input">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fecha-expiracion">
+                            <i class="far fa-calendar-alt"></i> Expiración
+                        </label>
+                        @*fecha vencimiento*@
+                        <input type="text" id="fecha-expiracion" name="FechaExpiracion" placeholder="MM/AA" class="card-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cvv">
+                            <i class="fas fa-lock"></i> CVV
+                        </label>
+
+                        @*CVV*@
+                        <input type="text" id="cvv" name="CodigoSeguridad" placeholder="123" class="card-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre-tarjeta">
+                        <i class="fas fa-signature"></i> Nombre en la Tarjeta
+                    </label>
+                    <input type="text" id="nombre-tarjeta" name="NombreTarjeta" placeholder="@Model.ClienteNombre.ToUpper()" class="card-input">
+                </div>
+
+                <button type="submit" class="btn-payment">
+                    <i class="fas fa-lock"></i> Confirmar Pago
+                </button>
+
+            </form>
+            </section>
+
+            <!-- Sección de protección -->
+            <section class="protection-section">
+                <div class="section-header">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Protección de Compra</h2>
+                </div>
+                <div class="protection-alert">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Obtenga reembolsado hasta el 100% si no puede asistir al evento</p>
+                </div>
+
+                <div class="protection-options">
+                    <div class="protection-card active" id="opcion-reembolsable">
+                        <div class="protection-header">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Ticket Reembolsable</h3>
+                        </div>
+                        <div class="protection-price">$704.40 <small>por ticket</small></div>
+                        <ul class="protection-benefits">
+                            <li><i class="fas fa-check"></i> 100% de reembolso</li>
+                            <li><i class="fas fa-check"></i> Proceso rápido</li>
+                            <li><i class="fas fa-check"></i> Cobertura amplia</li>
+                        </ul>
+                    </div>
+
+                    <div class="protection-card" id="opcion-no-reembolsable">
+                        <div class="protection-header">
+                            <i class="fas fa-times-circle"></i>
+                            <h3>Ticket No Reembolsable</h3>
+                        </div>
+                        <div class="protection-desc">Sin protección de reembolso</div>
+                    </div>
+                </div>
+
+                <div class="protection-coverage">
+                    <h4><i class="fas fa-umbrella"></i> Cobertura Incluye:</h4>
+                    <div class="coverage-grid">
+                        @foreach (var item in new List<string> { "Enfermedad/Lesión", "Problemas de viaje", "Emergencias", "Trabajo", "Evento cancelado" })
+                        {
+                            <div class="coverage-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>@item</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </section>
+
+
+        </div>
+
+        <!-- Columna derecha - Resumen de compra -->
+        <div class="summary-columna">
+            <section class="order-summary">
+                <div class="section-header">
+                    <i class="fas fa-receipt"></i>
+                    <h2>Resumen de Compra</h2>
+                </div>
+
+                <div class="tickets-summary" id="resumen-carrito">
+                    @foreach (var item in Model.Carrito)
+                    {
+                        <div class="ticket-item">
+                            <div class="ticket-header">
+                                <h3>@item.EventoNombre</h3>
+                                <span class="ticket-price">@((item.Precio * item.Cantidad).ToString("C"))</span>
+                            </div>
+                            <div class="ticket-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-ticket-alt"></i>
+                                    <span id="zona">@item.Cantidad x @item.Zona</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar-day"></i>
+                                    <span id="fechaEvento">@item.FechaEvento.ToString("dd/MM/yyyy")</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="order-totals">
+                    <div class="total-row">
+                        <span>Subtotal:</span>
+                        <span id="subTotal">@Model.Subtotal.ToString("C")</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Servicio (10%):</span>
+                        <span id="servicio">@Model.Servicio.ToString("C")</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>Total a Pagar:</span>
+                        <span id="total" >@Model.Total.ToString("C")</span>
+                    </div>
+                </div>
+
+                <div class="coupon-section">
+                    <h3><i class="fas fa-tag"></i> Aplicar Cupón</h3>
+                    <div class="coupon-input">
+                        <input type="text" id="cupon-code" placeholder="Código de descuento">
+                        <button class="btn-coupon" id="aplicar-cupon">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="security-badges">
+                    <div class="badge-item">
+                        <i class="fas fa-lock"></i>
+                        <span>Pago seguro</span>
+                    </div>
+                    <div class="badge-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Datos protegidos</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+<div id="modalMensaje" class="modal" style="display: none;">
+    <div class="modal-contenido">
+        <span id="cerrarModal" style="cursor:pointer; float:right;">&times;</span>
+        <p id="mensajeTexto"></p>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+
+
+        function mostrarModal(mensaje) {
+            const modal = document.getElementById("modalMensaje");
+            const texto = document.getElementById("mensajeTexto");
+            const cerrar = document.getElementById("cerrarModal");
+
+            texto.textContent = mensaje;
+            modal.style.display = "block";
+
+            cerrar.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+        }
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            try {
+
+                // Obtener tarjetas
+                const tarjetasResponse = await fetch("/Home/ObtenerTarjetas");
+                const tarjetasData = await tarjetasResponse.json();
+
+                const tarjetas = document.getElementById("numero-tarjeta");
+                const vencimiento = document.getElementById("fecha-expiracion")
+
+                if (tarjetasData.success && tarjetasData.tarjetas.length > 0) {
+                    //tarjetasdata.tarjetas.foreach(tarjeta => {
+                    //    const li = document.createelement("li");
+                    //    li.textcontent = `**** **** **** ${tarjeta.numero.slice(-4)} | titular: ${tarjeta.titular} | vence: ${tarjeta.vencimiento}`;
+                    //    tarjetaslist.appendchild(li);
+                    //});
+                    console.log(tarjetasData.tarjetas[0])
+                    tarjetas.value = tarjetasData.tarjetas[0].Numero
+                    vencimiento.value = tarjetasData.tarjetas[0].Vencimiento
+                } else {
+                    const li = document.createelement("li");
+                    li.textcontent = "tarjetas no agregadas";
+                    tarjetaslist.appendchild(li);
+                }
+            } catch (error) {
+                console.error("Error en la carga de perfil o tarjetas:", error);
+                alert("Ocurrió un error al cargar los datos.");
+            }
+        });
+
+
+        // Contador de tiempo
+        let tiempoRestante = 10 * 60; // 10 minutos en segundos
+
+        function actualizarContador() {
+            const minutos = Math.floor(tiempoRestante / 60);
+            const segundos = tiempoRestante % 60;
+            document.getElementById('contador').textContent =
+                `${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
+
+            if (tiempoRestante <= 0) {
+                clearInterval(intervalo);
+                alert('Tu tiempo para completar la compra ha expirado');
+                window.location.href = '@Url.Action("Index", "Home")';
+            }
+            tiempoRestante--;
+        }
+
+        actualizarContador();
+        const intervalo = setInterval(actualizarContador, 1000);
+
+        // Selección de protección
+        //document.querySelectorAll('.protection-card').forEach(card => {
+        //    card.addEventListener('click', function() {
+        //        document.querySelectorAll('.protection-card').forEach(c => c.classList.remove('active'));
+        //        this.classList.add('active');
+        //        document.getElementById('proteccion-reembolso').value =
+        //            this.id === 'opcion-reembolsable' ? 'true' : 'false';
+        //    });
+        //});
+
+        // Aplicar cupón
+        document.getElementById('aplicar-cupon').addEventListener('click', () => {
+            const codigo = document.getElementById('cupon-code').value;
+            if (codigo) {
+                alert(`Cupón "${codigo}" aplicado (simulado)`);
+            }
+        });
+
+        // Validación de formulario
+        document.getElementById('form-pago').addEventListener('submit', async function (e) {
+            e.preventDefault()
+            const numeroTarjeta = document.getElementById('numero-tarjeta').value;
+            const fechaExpiracion = document.getElementById('fecha-expiracion').value;
+            const cvv = document.getElementById('cvv').value;
+
+            if (!numeroTarjeta || !fechaExpiracion || !cvv) {
+                e.preventDefault();
+                alert('Por favor complete todos los campos de pago');
+                return
+            }
+            // Actualizar valor oculto (si mantienes el hidden)
+            const seleccion = document.querySelector('input[name="proteccion"]:checked');
+            if (seleccion) {
+                document.getElementById('proteccion-reembolso').value = seleccion.value;
+            }
+            function parseMonto(montoStr) {
+                // Elimina símbolos no numéricos, excepto punto y coma
+                montoStr = montoStr.replace(/[^\d,.-]/g, '');
+
+                // Reemplaza el punto (de separador de miles) si hay coma (decimal)
+                if (montoStr.includes(',') && montoStr.includes('.')) {
+                    montoStr = montoStr.replace(/\./g, '');
+                }
+
+                // Reemplaza la coma decimal por punto
+                montoStr = montoStr.replace(',', '.');
+
+                return parseFloat(montoStr);
+            }
+            const eventoId = document.getElementById('evento-id').value;    
+            const proteccionReembolso = document.getElementById('proteccion-reembolso').value;  
+            const nombreTarjeta = document.getElementById('nombre-tarjeta').value;  
+            const codigoSeguridad = document.getElementById('cvv').value;  
+            const correo = document.getElementById('customer-email').textContent; 
+            const nombre = document.getElementById('customer-name').textContent;    
+            const identificacion = document.getElementById('customer-id').textContent;  
+            const fechaEvento = document.getElementById('fechaEvento').textContent;
+            const totalTexto = document.getElementById('total').textContent;
+            const subtotaltexto = document.getElementById('subTotal').textContent
+            const serviciotexto = document.getElementById('servicio').textContent
+            const zona = document.getElementById('zona').textContent; 
+            const total = parseMonto(totalTexto);
+            const subtotal = parseMonto(subtotaltexto);
+            const servicio = parseMonto(serviciotexto);
+
+            const carrito = [
+                {
+                    EventoId: eventoId,
+                    Cantidad: 1,
+                    Precio: total,
+                    EventoNombre: '',
+                    Zona:zona,
+                }
+            ];
+            const response = await fetch('/home/ProcesarPago', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    EventoId: eventoId,
+                    ProteccionReembolso: proteccionReembolso,
+                    NombreTarjeta: nombreTarjeta,
+                    CodigoSeguridad: codigoSeguridad,
+                    NumeroTarjeta: numeroTarjeta,
+                    FechaExpiracion: fechaExpiracion,
+                    ClienteEmail: correo,
+                    ClienteNombre: nombre,
+                    ClienteIdentificacion: identificacion,
+                    FechaEvento: fechaEvento,
+                    Total: total,
+                    Subtotal: subtotal,
+                    Servcio: servicio,
+                    EventoNombre: '',
+                    Carrito: carrito
+                })
+            }); 
+            const result = await response.json();
+
+            if (result.success) {
+                window.location.href = result.redirectUrl;
+            } else {
+                mostrarModal(result.message);
+            }
+
+
+        });
+
+
+    </script>
+}

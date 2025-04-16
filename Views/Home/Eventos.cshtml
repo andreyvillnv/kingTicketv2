@@ -1,0 +1,92 @@
+@model List<ProyectoRelampago.Models.Evento>
+
+@Styles.Render("~/Content/eventos.css")
+<link rel="stylesheet" href="~/css/historial.css" />
+
+<main class="historial-container">
+    <h1>Gestion de Eventos</h1>
+
+    <!-- Formulario para crear un nuevo evento -->
+    <h3>Nuevo Evento</h3>
+
+    <div class="event-header">
+        <div>Titulo</div>
+        <div>Descripcion</div>
+        <div>Inicio</div>
+        <div>Fin</div>
+        <div>Lugar</div>
+        <div>Categoria</div>
+        <div>Imagen</div>
+        <div>Acciones</div>
+    </div>
+
+    @using (Html.BeginForm("CrearEvento", "Home", FormMethod.Post, new { enctype = "multipart/form-data", @class = "event-card" }))
+    {
+        @Html.TextBox("Titulo", null, new { placeholder = "Titulo" })
+        @Html.TextBox("Descripcion", null, new { placeholder = "Descripcion" })
+        @Html.TextBox("FechaInicio", null, new { placeholder = "Inicio", type = "date" })
+        @Html.TextBox("FechaFin", null, new { placeholder = "Fin", type = "date" })
+
+        @Html.DropDownList("Lugar", new SelectList(new[] { "Auditorio Principal", "Sala A", "Sala B" }))
+        @Html.DropDownList("Categoria", new SelectList(new[] { "Concierto", "Charla", "Taller" }))
+
+        <input type="file" name="ImgFile" accept="image/*" class="input-file" />
+
+        <div class="acciones">
+            <button type="submit" class="btn btn-success">Agregar</button>
+        </div>
+    }
+
+
+    <h3>Eventos</h3>
+
+    <div class="event-header">
+        <div>Titulo</div>
+        <div>Descripcion</div>
+        <div>Inicio</div>
+        <div>Fin</div>
+        <div>Lugar</div>
+        <div>Categoria</div>
+        <div>Activo</div>
+        <div>Imagen</div>
+    </div>
+
+    @foreach (var e in Model)
+    {
+        using (Html.BeginForm("EditarEvento", "Home", FormMethod.Post, new { @class = "event-card" }))
+        {
+            @Html.Hidden("Id", e.Id)
+
+            @Html.TextBox("Titulo", e.Titulo, new { placeholder = "Titulo" })
+            @Html.TextBox("Descripcion", e.Descripcion, new { placeholder = "Descripcion" })
+            @Html.TextBox("FechaInicio", e.FechaInicio.ToString("yyyy-MM-dd"), new { type = "date" })
+            @Html.TextBox("FechaFin", e.FechaFin?.ToString("yyyy-MM-dd"), new { type = "date" })
+
+            @Html.DropDownList("Lugar", new SelectList(new[] { "Auditorio Principal", "Sala A", "Sala B" }, e.Lugar))
+            @Html.DropDownList("Categoria", new SelectList(new[] { "Concierto", "Charla", "Taller" }, e.Categoria))
+
+            <div>@(e.Activo ? "Activo" : "Inactivo")</div>
+
+            <div>
+                @if (!string.IsNullOrEmpty(e.Img))
+                {
+                    <img src="@e.Img" />
+                }
+            </div>
+
+            <div class="acciones">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+
+                @if (e.Activo)
+                {
+                    <a href="@Url.Action("CancelarEvento", "Home", new { id = e.Id })" class="btn btn-warning">Cancelar</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("ReactivarEvento", "Home", new { id = e.Id })" class="btn btn-success">Reactivar</a>
+                }
+            </div>
+        }
+    }
+
+</main>

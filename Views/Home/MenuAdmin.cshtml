@@ -1,0 +1,14 @@
+﻿@model IEnumerable<ProyectoRelampago.Models.Evento>
+
+@Styles.Render("~/Content/Menu.css")
+
+<!-- Contenedor principal -->
+<main class="menu-container">
+    <h1>Menú</h1>
+    <div class="acciones">
+        @Html.ActionLink("Regresar a los Eventos", "Index", "Home", null, new { @class = "btn" })
+        @Html.ActionLink("Ver administracion de Usuarios", "Usuarios", "Home", null, new { @class = "btn" })
+        @Html.ActionLink("Ver administracion de Eventos", "Eventos", "Home", null, new { @class = "btn" })
+        @Html.ActionLink("Ver administracion de Usuarios", "AdminEmpleados", "Home", new {@class = "btn" })
+    </div>
+</main>

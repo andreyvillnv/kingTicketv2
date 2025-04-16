@@ -1,0 +1,407 @@
+
+
+@Styles.Render("~/Content/registro.css")
+<style>
+    .modal-error {
+        display: flex;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content-error {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 300px;
+        text-align: center;
+        position: relative;
+    }
+
+    .cerrar {
+        background-color: #fff;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        color: #bd4a4a;
+    }
+
+    .p-modal {
+        background-color: #fff;
+        color: black;
+    }
+
+    .cerrar:hover {
+        background-color: #fff;
+        color: #e22424;
+    }
+</style>
+
+<main>
+
+    <img class="logo" src="~/Content/images/logo.png" alt="logo">
+
+    <div class="titulo">
+        <h1>Registro</h1>
+    </div>
+
+
+    <form id="loginForm" class="form-registro">
+
+        <h2>Datos personales</h2>
+        <!-- formulario de datos personales -->
+        <section class="datos-personales">
+            <div class="nombre-apellidos registro">
+                <div>
+                    <label for="cedula">Cedula</label>
+                    <input type="number" id="cedula" name="cedula" required>
+                </div>
+                <div>  <button id="buscar" class="buscar" type="button">Buscar</button>  </div>
+
+                </div>
+                <div class="nombre-apellidos registro">
+
+
+                    <div>
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+
+                    <div>
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" name="apellidos" required>
+                    </div>
+
+                </div>
+
+                <div class="correo-celular registro">
+                    <div>
+                        <label for="correo">Correo</label>
+                        <input type="email" id="correo" name="correo" required>
+                    </div>
+
+                    <div>
+                        <label for="celular">Número de celular</label>
+                        <input type="number" id="celular" name="celular" required>
+                    </div>
+
+                </div>
+
+                <div class="direccion-telefono registro">
+                    <div>
+                        <label for="direccion">Dirreción</label>
+                        <input type="text" id="direccion" name="direccion">
+                    </div>
+
+                    <div>
+                        <label for="telefono">Número de teléfono recidencia</label>
+                        <input type="number" id="telefono" name="telefono">
+                    </div>
+
+
+                </div>
+
+                <div class="contrasena registro">
+                    <div>
+                        <label for="pass">Contraseña</label>
+                        <input type="password" id="pass" name="pass" required>
+                    </div>
+
+                    <div>
+                        <label for="pass-repit">Repita la contraseña</label>
+                        <input type="password" id="pass-repit" name="pass-repit" required>
+                    </div>
+
+                </div>
+
+        </section>
+
+        <h2>Registro de tarjeta (opcional)</h2>
+        <!-- formulario de la tarjeta -->
+        <section class="datos-tarjeta">
+
+            <div class="tarjeta">
+
+                <section class="registro">
+                    <div>
+                        <label for="nombre-tarjeta">Nombre del titular</label>
+                        <input type="text" id="nombre-tarjeta" name="nombre_tarjeta">
+
+                    </div>
+
+                    <div>
+                        <label for="mes-venc">Mes</label>
+                        <select name="mes_venc" id="mes-venc" class="mes-venc"></select>
+                    </div>
+
+                    <div>
+                        <label for="anio-venc">Año</label>
+                        <select name="anio-venc" id="anio-venc" class="anio_venc"></select>
+                    </div>
+
+                </section>
+
+                <section class="registro numero-cvv">
+                    <div>
+                        <label for="num-tarjeta">Número de tarjeta</label>
+                        <input type="number" id="num-tarjeta" maxlength="16" name="num_tarjeta">
+                    </div>
+
+                    <div class="cvv">
+                        <label for="num-cvv">CVV</label>
+                        <input type="number" maxlength="3" id="num-cvv" name="num_cvv">
+                    </div>
+                </section>
+
+            </div>
+
+            <section class="btn-terminos">
+
+                <input type="checkbox" id="terminos" name="terminos">
+                <label for="terminos">Aceptar terminos y condiciones.</label>
+
+                <input class="btn-registrar" type="submit" value="Registrar" required>
+
+            </section>
+
+        </section>
+
+    </form>
+</main>
+
+
+
+@*<div id="modal" class="modal" style="display:none">
+    <div class="modal-content">
+        <span class="close-btn" onclick="cerrarModal()">&times;</span>
+        <p id="mensaje"></p>
+
+    </div>
+</div>*@
+
+<div id="modalError" class="modal-error" style="display:none;">
+    <div class="modal-content-error">
+        <span id="cerrarModal" class="cerrar">&times;</span>
+        <p class="p-modal" id="mensajeError"></p>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+
+        function mostrarModal(mensaje) {
+            document.getElementById("mensajeError").innerText = mensaje;
+            document.getElementById("modalError").style.display = "flex";
+        }
+
+        document.getElementById("cerrarModal").addEventListener("click", function () {
+            document.getElementById("modalError").style.display = "none";
+        });
+
+        window.addEventListener("click", function (event) {
+            const modal = document.getElementById("modalError");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+        document.getElementById("buscar").addEventListener("click", async function (e) {
+            e.preventDefault()
+            const cedula = document.getElementById("cedula").value;
+            await fetch(`https://apis.gometa.org/cedulas/${cedula}`)
+                .then((res) => res.json())
+                // console.log(res)
+                .then((response) => {
+                    console.log(response.results)
+                    const name = response.results[0].firstname1;
+                    const lastname1 = response.results[0].lastname1;
+                    const lastname2 = response.results[0].lastname2;
+                    const cedula = response.results[0].cedula;
+                    const nombre = document.getElementById("nombre");
+                    const apellidos = document.getElementById("apellidos");
+                    nombre.value = name
+                    apellidos.value = lastname1 + " " + lastname2
+
+                })
+                .catch(error => {
+                    mostrarModal("No se encontró cédula")
+                });
+        });
+
+
+
+        function cerrarModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        window.onclick = function (event) {
+            var modal = document.getElementById("modal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+        // Obtener el elemento del formulario
+        const form = document.querySelector('.form-registro');
+        // Obtener los elementos de los select
+        const mesSelect = document.querySelector('.mes-venc');
+        const anioSelect = document.querySelector('.anio_venc');
+        // Obtener la fecha actual
+        const fechaActual = new Date();
+        const mesActual = fechaActual.getMonth() + 1; // Los meses son 0-indexed
+        const anioActual = fechaActual.getFullYear();
+        // Llenar el select de meses
+        for (let i = 1; i <= 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            mesSelect.appendChild(option);
+        }
+        // Llenar el select de años
+        for (let i = anioActual; i <= anioActual + 10; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            anioSelect.appendChild(option);
+        }
+        document.addEventListener("DOMContentLoaded", async function () {
+            console.log("JavaScript cargado correctamente");
+
+            const form = document.getElementById("loginForm");
+
+            if (form) {
+                form.addEventListener("submit", async function (e) {
+                    e.preventDefault();
+
+                    const correo = document.getElementById("correo").value;
+                    const pass = document.getElementById("pass").value;
+                    const passRepit = document.getElementById("pass-repit").value;
+                    const nombre = document.getElementById("nombre").value;
+                    const apellidos = document.getElementById("apellidos").value;
+                    const celular = document.getElementById("celular").value;
+                    const direccion = document.getElementById("direccion").value;
+                    const telefono = document.getElementById("telefono").value;
+                    const nombreTarjeta = document.getElementById("nombre-tarjeta").value;
+                    const numTarjeta = document.getElementById("num-tarjeta").value;
+                    const numCvv = document.getElementById("num-cvv").value;
+                    const mesVenc = document.getElementById("mes-venc").value;
+                    const anioVenc = document.getElementById("anio-venc").value;
+                    const cedula = document.getElementById("cedula").value;
+                    const terminos = document.getElementById("terminos").checked;
+
+                    // Validar contraseñas
+                    if (pass !== passRepit) {
+                        mostrarModal("Las contraseñas no coinciden.")
+                        //alert("Las contraseñas no coinciden.");
+                        return;
+                    }
+
+
+
+                    // Validar términos
+                    if (!terminos) {
+                        mostrarModal("Debes aceptar los términos y condiciones.")
+                       // alert("Debes aceptar los términos y condiciones.");
+                        return;
+                    }
+
+                    const tieneTarjeta = nombreTarjeta && numTarjeta && numCvv;
+
+                    const registrarUsuario = async () => {
+                        await fetch("/Home/RegistrarUsuario", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ correo, pass, nombre, apellidos, cedula, celular, direccion, telefono })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log("Respuesta usuario:", data);
+                                if (data.success) {
+                                  
+                                    cedula.value = ''
+                                    correo.value = ''
+                                    nombre.value = ''
+                                    pass.value = ''
+                                    passRepit.value = ''
+                                    apellidos.value = ''
+                                    celular.value = ''
+                                    direccion.value = ''
+                                    telefono.value = ''
+                                    mostrarModal(`Se envió el correo a ${correo}. Verifica tu cuenta.`)
+                                } else {
+
+                                    mostrarModal("Se produjo un error en el registro.")
+                                    //document.getElementById("mensaje").innerText = "Se produjo un error en el registro"
+                                    //document.getElementById("modal").style.display = "block";
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error registrando usuario:", error);
+                            });
+                    };
+
+                    if (tieneTarjeta) {
+                        const tarjetaData = {
+                            nombreTarjeta,
+                            numTarjeta,
+                            numCvv,
+
+                        };
+                        // Validar fecha de vencimiento
+                        const fechaVenc = new Date(anioVenc, mesVenc - 1);
+                        const hoy = new Date();
+                        if (fechaVenc < hoy) {
+                            mostrarModal("La fecha de vencimiento no puede ser anterior a hoy.")
+                            //alert("La fecha de vencimiento no puede ser anterior a hoy.");
+                            return;
+                        }
+
+
+                        await registrarUsuario();
+                        await fetch("/Home/RegistrarTarjeta", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(tarjetaData)
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log("Respuesta tarjeta:", data);
+                                if (data.success) {
+                                    return
+                                } else {
+                                    mostrarModal("Se produjo un error en el registro.")
+                                   // document.getElementById("mensaje").innerText = "Se produjo un error en el registro"
+                                   // document.getElementById("modal").style.display = "block";
+                                }
+                            })
+                            .catch(error => {
+                                mostrarModal("Error registrando tarjeta.")
+                                console.error("Error registrando tarjeta:", error);
+                            });
+                    } else {
+                        registrarUsuario();
+                    }
+                });
+            } else {
+                console.warn("No se encontró el formulario con id 'loginForm'");
+            }
+        });
+
+
+
+
+    </script>
+}

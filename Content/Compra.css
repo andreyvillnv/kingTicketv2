@@ -1,0 +1,449 @@
+﻿/* Estilos base */
+body {
+	margin: 0;
+	font-family: 'Segoe UI', Arial, sans-serif;
+	background-color: #111;
+	color: #fff;
+	line-height: 1.6;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+/* Contador de tiempo */
+.time-counter {
+	background: #BFF747;
+	color: #000;
+	padding: 10px 20px;
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+	.time-counter i {
+		font-size: 1.2rem;
+	}
+
+/* Contenedor principal */
+.compra-container {
+	flex: 1;
+	padding: 30px 20px;
+	max-width: 1400px;
+	margin: 0 auto;
+	width: 100%;
+}
+
+.compra-grid {
+	display: grid;
+	grid-template-columns: 1.5fr 1fr;
+	gap: 30px;
+}
+
+@media (max-width: 1024px) {
+	.compra-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Estilos comunes para secciones */
+section {
+	background: #1a1a1a;
+	border-radius: 12px;
+	padding: 25px;
+	margin-bottom: 25px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.section-header {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	margin-bottom: 25px;
+	color: #BFF747;
+}
+
+	.section-header i {
+		font-size: 1.5rem;
+	}
+
+h2, h3 {
+	margin: 0;
+	color: #BFF747;
+}
+
+h2 {
+	font-size: 1.5rem;
+}
+
+h3 {
+	font-size: 1.2rem;
+}
+
+/* Información del cliente */
+.info-grid {
+	display: grid;
+	gap: 20px;
+}
+
+.info-item {
+	display: flex;
+	gap: 15px;
+	align-items: center;
+}
+
+	.info-item i {
+		color: #BFF747;
+		font-size: 1.2rem;
+		width: 25px;
+		text-align: center;
+	}
+
+.info-label {
+	font-size: 0.9rem;
+	color: #aaa;
+	display: block;
+}
+
+.info-value {
+	font-weight: 500;
+	font-size: 1rem;
+}
+
+/* Formulario de pago */
+.payment-form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.form-group {
+	margin-bottom: 15px;
+}
+
+.form-row {
+	display: flex;
+	gap: 15px;
+}
+
+	.form-row .form-group {
+		flex: 1;
+	}
+
+label {
+	display: block;
+	margin-bottom: 8px;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+	label i {
+		color: #BFF747;
+		font-size: 1rem;
+	}
+
+.card-input {
+	width: 100%;
+	padding: 12px 15px;
+	border-radius: 8px;
+	border: 1px solid #333;
+	background: #222;
+	color: white;
+	font-size: 1rem;
+	transition: all 0.3s ease;
+}
+
+	.card-input:focus {
+		outline: none;
+		border-color: #BFF747;
+		box-shadow: 0 0 0 2px rgba(191, 247, 71, 0.2);
+	}
+
+.btn-payment {
+	background: #BFF747;
+	color: #000;
+	width: 100%;
+	padding: 15px;
+	border: none;
+	border-radius: 8px;
+	font-weight: bold;
+	font-size: 1.1rem;
+	cursor: pointer;
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	transition: all 0.3s ease;
+}
+
+	.btn-payment:hover {
+		background: #a5e02e;
+		transform: translateY(-2px);
+	}
+
+/* Protección de compra */
+.protection-alert {
+	background: rgba(191, 247, 71, 0.1);
+	border-left: 4px solid #BFF747;
+	padding: 15px;
+	margin-bottom: 20px;
+	display: flex;
+	gap: 10px;
+	border-radius: 0 4px 4px 0;
+}
+
+	.protection-alert i {
+		color: #BFF747;
+	}
+
+.protection-options {
+	display: flex;
+	gap: 15px;
+	margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+	.protection-options {
+		flex-direction: column;
+	}
+}
+
+.protection-card {
+	flex: 1;
+	background: #222;
+	border: 1px solid #333;
+	border-radius: 8px;
+	padding: 20px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+	.protection-card.active {
+		border-color: #BFF747;
+		background: rgba(191, 247, 71, 0.05);
+	}
+
+.protection-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 15px;
+}
+
+	.protection-header i {
+		font-size: 1.5rem;
+		color: #BFF747;
+	}
+
+.protection-price {
+	font-weight: bold;
+	font-size: 1.2rem;
+	color: #BFF747;
+	margin-bottom: 15px;
+}
+
+	.protection-price small {
+		font-size: 0.8rem;
+		color: #aaa;
+	}
+
+.protection-benefits {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+	.protection-benefits li {
+		margin-bottom: 8px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 0.9rem;
+	}
+
+	.protection-benefits i {
+		color: #BFF747;
+		font-size: 0.8rem;
+	}
+
+.protection-desc {
+	font-size: 0.9rem;
+	color: #aaa;
+}
+
+.coverage-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 10px;
+	margin-top: 15px;
+}
+
+@media (max-width: 480px) {
+	.coverage-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.coverage-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.9rem;
+}
+
+	.coverage-item i {
+		color: #BFF747;
+	}
+
+/* Resumen de compra */
+.tickets-summary {
+	max-height: 400px;
+	overflow-y: auto;
+	margin-bottom: 20px;
+}
+
+.ticket-item {
+	background: #222;
+	border-radius: 8px;
+	padding: 15px;
+	margin-bottom: 15px;
+}
+
+.ticket-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+	.ticket-header h3 {
+		margin: 0;
+		font-size: 1.1rem;
+	}
+
+.ticket-price {
+	font-weight: bold;
+	color: #BFF747;
+}
+
+.ticket-details {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.detail-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.9rem;
+	color: #aaa;
+}
+
+	.detail-item i {
+		color: #BFF747;
+		width: 15px;
+		text-align: center;
+	}
+
+.empty-cart {
+	text-align: center;
+	color: #aaa;
+	padding: 20px;
+}
+
+.order-totals {
+	margin-top: 25px;
+	padding-top: 15px;
+	border-top: 1px solid #333;
+}
+
+.total-row {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+
+.grand-total {
+	font-weight: bold;
+	font-size: 1.1rem;
+	margin-top: 15px;
+	padding-top: 15px;
+	border-top: 1px solid #444;
+}
+
+/* Cupón */
+.coupon-section {
+	margin-top: 30px;
+	padding-top: 20px;
+	border-top: 1px solid #333;
+}
+
+	.coupon-section h3 {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 15px;
+	}
+
+	.coupon-section i {
+		color: #BFF747;
+	}
+
+.coupon-input {
+	display: flex;
+	gap: 10px;
+}
+
+	.coupon-input input {
+		flex: 1;
+		padding: 12px 15px;
+		border-radius: 8px;
+		border: 1px solid #333;
+		background: #222;
+		color: white;
+	}
+
+.btn-coupon {
+	background: #333;
+	color: white;
+	border: none;
+	border-radius: 8px;
+	padding: 0 20px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.1rem;
+}
+
+	.btn-coupon:hover {
+		background: #444;
+	}
+
+/* Badges de seguridad */
+.security-badges {
+	margin-top: 30px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+}
+
+.badge-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.9rem;
+	color: #aaa;
+}
+
+	.badge-item i {
+		color: #BFF747;
+	}
